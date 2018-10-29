@@ -1,9 +1,12 @@
-var express = require('express'); //import express 
-var app = express();
-var path = require('path')
+const express = require('express'); //import express 
+const app = express();
+var bodyParser = require('body-parser')
+const path = require('path')
+const Joi = require('joi')
 
 app.use(express.static(path.join(__dirname, 'HomePage')));
-
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
 
 //to handle HTTP get request
 app.get('/test', function (req, res) {
@@ -18,8 +21,11 @@ app.put('/', function (req, res) {
 });
 
 app.post('/', function (req, res) {
-    console.log("HTTP POST Request");
-    res.send("HTTP POST Request");
+    console.log(req.body)
+    if(req.body)
+        res.send(req.body);
+    else
+        res.send('empty body')
 });
 
 app.delete('/', function (req, res) {
