@@ -39,6 +39,6 @@ UserInterfaceState.xcuserstate
 .node_repl_history
 .profile
 .sudo_as_admin_successful
-.cache
-.npm
-.ssh
+.cache/
+.npm/
+.ssh/
