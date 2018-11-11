@@ -33,3 +33,12 @@ $RECYCLE.BIN/
 .DS_Store
 Thumbs.db
 UserInterfaceState.xcuserstate
+.bash_history
+.bash_logout
+.bashrc
+.node_repl_history
+.profile
+.sudo_as_admin_successful
+.cache
+.npm
+.ssh
