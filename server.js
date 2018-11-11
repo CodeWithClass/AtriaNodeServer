@@ -33,8 +33,8 @@ app.delete('/', function (req, res) {
     res.send("HTTP DELETE Request");
 });
 
-//start server on port: 8080
-var server = app.listen(8080, function () {
+//start server on port: 80
+var server = app.listen(80, function () {
 
     var host = server.address().address;
     var port = server.address().port;
