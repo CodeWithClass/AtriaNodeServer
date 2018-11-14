@@ -34,7 +34,7 @@ app.delete('/', function (req, res) {
 });
 
 //start server on port: 8080
-var server = app.listen(8080, function () {
+var server = app.listen(6969, function () {
 
     var host = server.address().address;
     var port = server.address().port;
