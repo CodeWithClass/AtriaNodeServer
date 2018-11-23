@@ -14,4 +14,10 @@ router.get('/api/ihealth', (req, res) => {
     })
 });
 
+router.get('/api/ihealth_remove', (req, res) => {
+    res.json({
+        message: "sucessfully removed Atria's authorization"
+    })
+});
+
 module.exports = router
