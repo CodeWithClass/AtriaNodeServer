@@ -8,4 +8,10 @@ router.get('/api/get', (req, res) =>{
     })
 });
 
+router.get('/api/ihealth', (req, res) => {
+    res.json({
+        message: "welcome to ihealth"
+    })
+});
+
 module.exports = router
