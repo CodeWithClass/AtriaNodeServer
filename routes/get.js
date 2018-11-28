@@ -18,20 +18,17 @@ router.get('/api/ihealth/auth_inprogress', (req, res) => {
         .then(response => {
             console.log(response.data)
             resdata = response.data
-            response.writeHead(200, {
-                'Location': 'http://atria.coach/api/ihealth/auth_finished/' + 'AccessToken=' + resdata.AccessToken
-                    + 'UID=' + resdata.UserID
-            })
+            window.location( '/auth_finished/' + 'AccessToken=' + resdata.AccessToken + 'UID=' + resdata.UserID)
         })
         .catch(error => {
             console.log(error);
         });
 
-    // res.json({
-    //     message: "welcome to ihealth getting everything ready for ya",
-    //     reqURL: authcode
-    // })
-    res.end();
+    res.json({
+        message: "welcome to ihealth getting everything ready for ya",
+        // reqURL: authcode
+    })
+    // res.end();
 });
 
 router.get('/api/ihealth/auth_finished')
