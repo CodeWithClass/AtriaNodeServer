@@ -18,7 +18,15 @@ router.get('/api/ihealth/auth_inprogress', (req, res) => {
         .then(response => {
             console.log(response.data)
             resdata = response.data
-            window.location( '/auth_finished/' + 'AccessToken=' + resdata.AccessToken + 'UID=' + resdata.UserID)
+            axios.get( 'atria.coach/api/ihealth/auth_finished/' + 'AccessToken=' + resdata.AccessToken + 'UID=' + resdata.UserID)
+                .then(response => {
+                    console.log(response.data)
+                    // resdata = response.data
+                   
+                })
+                .catch(error => {
+                    console.log(error);
+                });
         })
         .catch(error => {
             console.log(error);
