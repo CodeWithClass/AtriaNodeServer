@@ -1,8 +1,10 @@
 const express = require('express');
+const app = express();
 const router = express.Router()
-const jwt = require('jsonwebtoken')
-const axios = require('axios');
-
+// const jwt = require('jsonwebtoken')
+// const axios = require('axios');
+// var bodyParser = require('body-parser')
+const path = require('path')
 
 router.get('/api/get', (req, res) => {
     res.json({
@@ -13,21 +15,21 @@ router.get('/api/get', (req, res) => {
 router.get('/api/ihealth/auth_inprogress', (req, res) => {
     // console.log(req.url)
     let reqURL = decodeURI(req.url)
-    let code = reqURL.split('code=')[1]
-    axios.get('https://api.ihealthlabs.com:8443/OpenApiV2/OAuthv2/userauthorization/?client_id=477d71a15cb74d14aec1d661cdc92e81&client_secret=f4a0b5d7986843529cc0f4c3f614c3d5&grant_type=authorization_code&redirect_uri=' + encodeURI('http://atria.coach/api/ihealth/auth_finished/') + '&code=' + code)
-        .then(response => {
-            console.log(response.data)
-            resdata = response.data
-        })
-        .catch(error => {
-            console.log(error);
-        });
+    let AcessCode = reqURL.split('code=')[1]
+    if(AcessCode){
+        console.log(AcessCode)
 
-    res.json({
-        message: "welcome to ihealth getting everything ready for ya",
-        // reqURL: authcode
-    })
-    // res.end();
+        res.sendFile('success.html', { root: path.join(__dirname, '../public/iHealthAuth') })
+    }
+    else{
+        res.sendFile('failure.html', { root: path.join(__dirname, '../public/iHealthAuth') })
+    }
+    
+    // res.sendFile('index.html', { root: path.join(__dirname, '../HomePage') })
+
+    
+
+    
 });
 
 router.get('/api/ihealth/auth_finished')
