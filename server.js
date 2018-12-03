@@ -1,9 +1,7 @@
 const express = require('express'); //import express 
 const app = express();
-var bodyParser = require('body-parser')
+const bodyParser = require('body-parser')
 const path = require('path')
-// const Joi = require('joi')
-// const jwt = require('jsonwebtoken')
 const getRouter = require('./routes/get.js')
 const postRouter = require('./routes/post.js')
 

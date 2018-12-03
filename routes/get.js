@@ -5,6 +5,8 @@ const router = express.Router()
 // const axios = require('axios');
 // var bodyParser = require('body-parser')
 const path = require('path')
+const ihealthAuth = require('../iHealth/auth')
+
 
 router.get('/api/get', (req, res) => {
     res.json({
@@ -13,13 +15,21 @@ router.get('/api/get', (req, res) => {
 });
 
 router.get('/api/ihealth/auth_inprogress', (req, res) => {
-    // console.log(req.url)
-    let reqURL = decodeURI(req.url)
-    let AcessCode = reqURL.split('code=')[1]
-    if(AcessCode){
-        console.log(AcessCode)
+    // let reqURL = decodeURI(req)
+    let AcessCode = req.query.code
+    let uid = req.query.uid;
+    
 
-        res.sendFile('success.html', { root: path.join(__dirname, '../public/iHealthAuth') })
+    if(AcessCode){
+        ihealthAuth.AccessToken(AcessCode, uid).then((resp) =>{
+            // console.log(resp)
+            if (resp === "success")
+                res.sendFile('success.html', { root: path.join(__dirname, '../public/iHealthAuth') })
+            else
+                // res.json({resp})
+                res.sendFile('failure.html', { root: path.join(__dirname, '../public/iHealthAuth') })
+
+        })
     }
     else{
         res.sendFile('failure.html', { root: path.join(__dirname, '../public/iHealthAuth') })
