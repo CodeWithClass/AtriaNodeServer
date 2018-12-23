@@ -27,13 +27,12 @@ let AccessObj;
 
 var AccessToken = (withingscode, firebaseUID) =>{
     return axios.post(withingsAuthURL, { 
-        params: {
-            grant_type: "authorization_code",
-            client_id: client_id,
-            client_secret: client_secret,
-            code: withingscode,
-            redirect_uri: redirect_uri,
-        }
+        
+        grant_type: "authorization_code",
+        client_id: client_id,
+        client_secret: client_secret,
+        code: withingscode,
+        redirect_uri: redirect_uri,
     })
     .then(res =>{
         return WriteToDb(firebaseUID, res.data)
