@@ -48,6 +48,30 @@ router.get('/api/withings', (req, res)=>{
     })
 })
 
+router.get('/api/withings/auth', (req, res) => {
+    console.log(req)
+    res.json({
+        message: req
+    })
+    // let AcessCode = req.query.code
+    // let uid = req.query.uid;
+
+    // if (AcessCode) {
+    //     ihealthAuth.AccessToken(AcessCode, uid).then((resp) => {
+    //         // console.log(resp)
+    //         if (resp === "success")
+    //             res.sendFile('success.html', { root: path.join(__dirname, '../public/iHealthAuth') })
+    //         else
+    //             // res.json({resp})
+    //             res.sendFile('failure.html', { root: path.join(__dirname, '../public/iHealthAuth') })
+
+    //     })
+    // }
+    // else {
+    //     res.sendFile('failure.html', { root: path.join(__dirname, '../public/iHealthAuth') })
+    // }
+});
+
 
 
 
