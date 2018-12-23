@@ -7,18 +7,12 @@ const router = express.Router()
 const path = require('path')
 const ihealthAuth = require('../iHealth/auth')
 
-
-router.get('/api/get', (req, res) => {
-    res.json({
-        message: "welcome to get in anodda fileee"
-    })
-});
+// =============================== iHealth ================================>
 
 router.get('/api/ihealth/auth_inprogress', (req, res) => {
     // let reqURL = decodeURI(req)
     let AcessCode = req.query.code
     let uid = req.query.uid;
-    
 
     if(AcessCode){
         ihealthAuth.AccessToken(AcessCode, uid).then((resp) =>{
@@ -34,12 +28,6 @@ router.get('/api/ihealth/auth_inprogress', (req, res) => {
     else{
         res.sendFile('failure.html', { root: path.join(__dirname, '../public/iHealthAuth') })
     }
-    
-    // res.sendFile('index.html', { root: path.join(__dirname, '../HomePage') })
-
-    
-
-    
 });
 
 router.get('/api/ihealth/auth_finished')
@@ -49,5 +37,19 @@ router.get('/api/ihealth_remove', (req, res) => {
         message: "sucessfully removed Atria's authorization"
     })
 });
+// ===========================================================================>
+
+
+
+// =============================== Withings ================================>
+router.get('/api/withings', (req, res)=>{
+    res.json({
+        message: 'welcome'
+    })
+})
+
+
+
+
 
 module.exports = router
