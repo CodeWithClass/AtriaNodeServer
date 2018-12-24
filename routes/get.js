@@ -6,6 +6,8 @@ const router = express.Router()
 // var bodyParser = require('body-parser')
 const path = require('path')
 const withingsAuth = require('../withings/auth')
+var fs = require('fs');
+
 
 // =============================== iHealth ================================>
 
@@ -52,17 +54,24 @@ router.get('/api/withings/auth', (req, res) => {
 
     let AcessCode = req.query.code
     let uid = req.query.state;
-
+    // console.log(AcessCode)
     if (AcessCode) {
-        withingsAuth.AccessToken(AcessCode, uid).then((resp) => {
-            // console.log(resp)
-            if (resp === "success")
-                res.sendFile('success.html', { root: path.join(__dirname, '../public/iHealthAuth') })
-            else
-                // res.json({resp})
-                res.sendFile('failure.html', { root: path.join(__dirname, '../public/iHealthAuth') })
+        withingsAuth.AccessToken(AcessCode, uid)
+        
+        .then((resp) => {
+            // // console.log(resp)
+            // if (resp === "success")
+            //     res.sendFile('success.html', { root: path.join(__dirname, '../public/iHealthAuth') })
+            // else
+            //     res.sendFile('failure.html', { root: path.join(__dirname, '../public/iHealthAuth') })
+            
+            res.writeHeader(200, { "Content-Type": "text/html" });
+            res.write(resp);
+            res.end();  
+
 
         })
+        .catch(err=>{console.log(err)})
     }
     else {
         res.sendFile('failure.html', { root: path.join(__dirname, '../public/iHealthAuth') })
