@@ -1,5 +1,6 @@
 const firebase = require('firebase-admin')
 var serviceAccount = require('../firebase/adminsdk.json');
+var querystring = require('querystring');
 
 firebase.initializeApp({
     credential: firebase.credential.cert(serviceAccount),
@@ -32,14 +33,15 @@ var AccessToken = (withingscode, firebaseUID) =>{
     }
 
     console.log(requestBody)
+    console.log(config)
 
-    return axios.post(withingsAuthURL, requestBody, config)
+    return axios.post(withingsAuthURL, querystring.stringify(requestBody), config)
     .then(res =>{
         return WriteToDb(firebaseUID, res.data)
     })
     .catch(err =>{
         // return err
-        console.log(err)
+        console.log(err.response)
         return
     })
 }

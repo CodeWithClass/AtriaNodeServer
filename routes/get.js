@@ -6,7 +6,6 @@ const router = express.Router()
 // var bodyParser = require('body-parser')
 const path = require('path')
 const withingsAuth = require('../withings/auth')
-var fs = require('fs');
 
 
 // =============================== iHealth ================================>
