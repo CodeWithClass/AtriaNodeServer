@@ -59,15 +59,12 @@ router.get('/api/withings/auth', (req, res) => {
         withingsAuth.AccessToken(AcessCode, uid)
         
         .then((resp) => {
-            // // console.log(resp)
-            // if (resp === "success")
-            //     res.sendFile('success.html', { root: path.join(__dirname, '../public/iHealthAuth') })
-            // else
-            //     res.sendFile('failure.html', { root: path.join(__dirname, '../public/iHealthAuth') })
-            
-            res.writeHeader(200, { "Content-Type": "text/html" });
-            res.write(resp);
-            res.end();  
+            console.log(resp)
+            if (resp === "success")
+                res.sendFile('success.html', { root: path.join(__dirname, '../public/iHealthAuth') })
+            else
+                res.sendFile('failure.html', { root: path.join(__dirname, '../public/iHealthAuth') })
+          
 
 
         })

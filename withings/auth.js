@@ -20,26 +20,24 @@ const axios = require('axios')
 const client_id = '5d81605593c6c4e8e1c3871f69fa3ed026659338266b7e27ba07a352bfb6d7fb'
 const client_secret = '2798f13818cc213ccce23a4c7c6e0e107a2156ff9aeffb275bc8e9eccde4dd63'
 const redirect_uri = "http://atria.coach/api/withings/auth"
-const withingsAuthURL = "https://account.withings.com/oauth2/token[grant_type=authorization_code]"
-const sc = "D8F9561AAF624FE6B4DA9E0630E4EC01"
-const sv = "A106AD714CC84B559CD16A64581CD233"
+const withingsAuthURL = "https://account.withings.com/oauth2/token"
 let AccessObj;
 
 var AccessToken = (withingscode, firebaseUID) =>{
     console.log(withingscode)
-     return axios.post(withingsAuthURL, { 
-        params:{
+     return axios.post(withingsAuthURL, {
+
         grant_type: "authorization_code",
         client_id: client_id,
         client_secret: client_secret,
         code: withingscode,
         redirect_uri: redirect_uri,
-        }
+        
     })
     .then(res =>{
-        // return WriteToDb(firebaseUID, res.data)
+        return WriteToDb(firebaseUID, res.data)
         // console.log(res.data)
-        return res.data
+        // return res.data
     })
     .catch(err =>{
         return err

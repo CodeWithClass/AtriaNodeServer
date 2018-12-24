@@ -34,7 +34,7 @@ router.post('/api/post', (req, res) => {
 })
 
 // =============================== Withings ================================>
-router.post('/api/withings', (req, res) => {
+router.post('/api/withings/auth', (req, res) => {
     res.json({
         message: 'welcome to post'
     })
