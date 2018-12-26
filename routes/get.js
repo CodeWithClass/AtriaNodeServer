@@ -50,7 +50,6 @@ router.get('/api/withings', (req, res)=>{
 })
 
 router.get('/api/withings/auth', (req, res) => {
-
     let AcessCode = req.query.code
     let uid = req.query.state;
     // console.log(AcessCode)
@@ -63,15 +62,25 @@ router.get('/api/withings/auth', (req, res) => {
                 res.sendFile('success.html', { root: path.join(__dirname, '../public/iHealthAuth') })
             else
                 res.sendFile('failure.html', { root: path.join(__dirname, '../public/iHealthAuth') })
-          
-
-
         })
         .catch(err=>{console.log(err)})
     }
     else {
         res.sendFile('failure.html', { root: path.join(__dirname, '../public/iHealthAuth') })
     }
+});
+
+router.get('/api/withings/refresh_token', (req, res) => {
+    let refToken = req.query.RefreshToken
+    let uid = req.query.Uid;
+    withingsAuth.RefreshToken(refToken, uid)
+
+        .then((resp) => {
+            res.json({
+                message: 'OK'
+            })
+        })
+        .catch(err => { console.log(err) })
 });
 
 
