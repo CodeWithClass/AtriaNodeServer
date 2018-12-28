@@ -1,6 +1,11 @@
 const firebase = require('firebase-admin')
 var serviceAccount = require('../firebase/adminsdk.json');
-var querystring = require('querystring');
+// var querystring = require('querystring');
+// var stringify = require('json-stringify-safe');
+// const axios = require('axios')
+var rp = require('request-promise');
+
+
 
 firebase.initializeApp({
     credential: firebase.credential.cert(serviceAccount),
@@ -9,7 +14,6 @@ firebase.initializeApp({
 
 const db = firebase.database();
 
-const axios = require('axios')
 const client_id = '5d81605593c6c4e8e1c3871f69fa3ed026659338266b7e27ba07a352bfb6d7fb'
 const client_secret = '2798f13818cc213ccce23a4c7c6e0e107a2156ff9aeffb275bc8e9eccde4dd63'
 const redirect_uri = "http://atria.coach/api/withings/auth"
@@ -26,52 +30,46 @@ var AccessToken = (withingscode, firebaseUID) =>{
         grant_type: "authorization_code",
     }
 
-    const config = {
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-        }
-    }
+    const requestData = {
+        method: 'POST',
+        uri: TokenURL,
+        form: requestBody,
+        json: true // Automatically stringifies the body to JSON
+    };
 
-    console.log(requestBody)
-    console.log(config)
-
-    return axios.post(TokenURL, querystring.stringify(requestBody), config)
-    .then(res =>{
-        return WriteToDb(firebaseUID, res.data)
-    })
-    .catch(err =>{
-        // return err
-        console.log(err.response)
-        return
-    })
+    return rp(requestData)
+        .then((resBody) => {
+            console.log(resBody)
+            return WriteToDb(firebaseUID, resBody)
+        })
+        .catch((err) => {
+            return console.log(err)
+        });
 }
 
-var RefreshToken = (refreshToken, firebaseUID) => {
+var RefreshToken = (refresh_token, firebaseUID) => {
     const requestBody = {
         client_id,
         client_secret,
-        refresh_token: refreshToken,
+        refresh_token,
         grant_type: "refresh_token",
     }
 
-    const config = {
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-        }
-    }
+    const requestData = {
+        method: 'POST',
+        uri: TokenURL,
+        form: requestBody,
+        json: true // Automatically stringifies the body to JSON
+    };
 
-    // console.log(requestBody)
-    // console.log(config)
-    return axios.post(TokenURL, querystring.stringify(requestBody), config)
-        .then(res => {
-            return WriteToDb(firebaseUID, res.data)
+    return rp(requestData)
+        .then((res) => {
+            return WriteToDb(firebaseUID, res)
         })
-        .catch(err => {
-            return
-        })
+        .catch((err) => {
+            return console.log(err)            
+        });
 }
-
-
 
 
 var WriteToDb = (firebaseUID, AuthObj) =>{
@@ -80,10 +78,11 @@ var WriteToDb = (firebaseUID, AuthObj) =>{
         user.update({
             withingsAuth: AuthObj
             })
-        resolve("success") 
-        }
+        resolve(
+            {   fbstatus: "successfully added AuthData to db",
+                data: AuthObj   }
+        )}
     )
 
-
 }
-module.exports = { AccessToken: AccessToken }
+module.exports = { AccessToken, RefreshToken }
