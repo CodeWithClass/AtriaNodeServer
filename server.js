@@ -1,5 +1,6 @@
 const express = require('express'); //import express 
 const app = express();
+const cors = require('cors')
 const bodyParser = require('body-parser')
 const path = require('path')
 const getRouter = require('./routes/get.js')
@@ -9,6 +10,7 @@ const postRouter = require('./routes/post.js')
 app.use(express.static(path.join(__dirname, './public/HomePage')));
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
+app.use(cors())
 
 ////// ROUTES /////
 app.use(getRouter);
