@@ -67,7 +67,7 @@ var RefreshToken = (refresh_token, firebaseUID) => {
             return WriteToDb(firebaseUID, res)
         })
         .catch((err) => {
-            return console.log(err)            
+            return err.response            
         });
 }
 

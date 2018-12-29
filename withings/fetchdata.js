@@ -30,35 +30,33 @@ var getBPData = (accesstoken, firebaseUID, date) =>{
 }
 
 var ProcessData = (firebaseUID, date, dataObj = {})=>{
-    // console.log(dataObj.measuregrps)
     if (!dataObj.measuregrps)
         return dataObj
-
-    // console.log(dataObj.measuregrps[0]['measures'][0].value)
     
     let formattedData = dataObj.measuregrps.map(d =>{
-        let fullDate = new Date(d.created * 1000)
+        let fullDate = new Date(d.created * 1000) //convert from unix format to JS
         let formatedDate = fullDate.getFullYear() + "-" + (fullDate.getMonth() + 1) + "-" + fullDate.getDate() + " " + fullDate.getHours() + ":" + fullDate.getMinutes() + ":" + fullDate.getSeconds() ;
+        
         let diastolic = d.measures[0] ? d.measures[0].value : 0
+        while(diastolic > 300) diastolic /= 10 //manual update adds extra 0s
+
         let systolic = d.measures[1] ? d.measures[1].value : 0
+        while (systolic > 300) systolic /= 10
+
         let hr = d.measures[2] ? d.measures[2].value : 0
+        while (hr > 300) hr /= 10
+
         return {
             measurement: {
                 date: formatedDate,
-                bp: {
-                    diastolic,
-                    systolic,
-                    hr,
-                }
+                diastolic,
+                systolic,
+                hr,
             }
         }
     })
     
-    
-    return formattedData
-
-   
-    
+    return WriteToDb(firebaseUID, date, formattedData)    
 }
 var WriteToDb = (firebaseUID, date, bpData = {},) => {
     return new Promise((resolve, reject) => {
