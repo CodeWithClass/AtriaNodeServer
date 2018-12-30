@@ -22,10 +22,13 @@ var getBPData = (accesstoken, firebaseUID, date) =>{
 
     return rp(requestData)
         .then((res) => {
-            return ProcessData(firebaseUID, date, res.body || res)
+            if (res.status == 401)
+                return res
+            else
+                return ProcessData(firebaseUID, date, res.body || res)
         })
         .catch((err) => {
-            return console.log(err)
+            return err.response
         });
 }
 

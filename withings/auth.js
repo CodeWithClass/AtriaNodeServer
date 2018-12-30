@@ -79,7 +79,7 @@ var WriteToDb = (firebaseUID, AuthObj) =>{
             withingsAuth: AuthObj
             })
         resolve(
-            {   fbstatus: "successfully added AuthData to db",
+            {   fbstatus: 200,
                 data: AuthObj   }
         )}
     )
