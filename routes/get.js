@@ -33,7 +33,7 @@ router.get('/api/withings/auth', (req, res) => {
         .catch(err=>{console.log(err)})
     }
     else {
-        res.sendFile('failure.html', { root: path.join(__dirname, '../public/iHealthAuth') })
+        res.sendFile('failure.html', { root: path.join(__dirname, '../public/withingsAuth') })
     }
 });
 
