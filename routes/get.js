@@ -26,9 +26,9 @@ router.get('/api/withings/auth', (req, res) => {
         .then((resp) => {
             console.log(resp)
             if (resp.fbstatus === 200)
-                res.sendFile('success.html', { root: path.join(__dirname, '../public/iHealthAuth') })
+                res.sendFile('success.html', { root: path.join(__dirname, '../public/withingsAuth') })
             else
-                res.sendFile('failure.html', { root: path.join(__dirname, '../public/iHealthAuth') })
+                res.sendFile('failure.html', { root: path.join(__dirname, '../public/withingsAuth') })
         })
         .catch(err=>{console.log(err)})
     }
