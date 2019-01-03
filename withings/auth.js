@@ -1,8 +1,5 @@
 const firebase = require('firebase-admin')
 var serviceAccount = require('../firebase/adminsdk.json');
-// var querystring = require('querystring');
-// var stringify = require('json-stringify-safe');
-// const axios = require('axios')
 var rp = require('request-promise');
 
 

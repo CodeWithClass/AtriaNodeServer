@@ -1,6 +1,5 @@
 const firebase = require('firebase-admin')
 var serviceAccount = require('../firebase/adminsdk.json');
-// var querystring = require('querystring');
 var rp = require('request-promise');
 
 
