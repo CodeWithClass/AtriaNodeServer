@@ -48,6 +48,9 @@ var ProcessData = (firebaseUID, date, dataObj = {})=>{
         let hr = d.measures[2] ? d.measures[2].value : 0
         while (hr > 300) hr /= 10
 
+        if (diastolic === 0 || systolic === 0)
+            return null
+
         return {
             measurement: {
                 date: formatedDate,
@@ -58,7 +61,9 @@ var ProcessData = (firebaseUID, date, dataObj = {})=>{
         }
     })
     
-    return WriteToDb(firebaseUID, date, formattedData)    
+    let filteredData = formattedData.filter(element => element)
+    
+    return WriteToDb(firebaseUID, date, filteredData)    
 }
 var WriteToDb = (firebaseUID, date, bpData = {},) => {
     return new Promise((resolve, reject) => {
