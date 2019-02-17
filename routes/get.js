@@ -67,6 +67,24 @@ router.get('/api/withings/fetchdata', (req, res) => {
         .catch(err => { console.log(err) })
 });
 
+// ============================ Fitbit =======================
+
+router.get('/api/fitbit/fetchdata', (req, res) => {
+    let accesstoken = req.query.access_token
+    let uid = req.query.Uid;
+    let date = req.query.date;
+
+    withingsData.getBPData(accesstoken, uid, date)
+        .then((resp) => {
+            res.json({
+                response: resp
+            })
+        })
+        .catch(err => { console.log(err) })
+});
+
+// ============================ ML ============================
+
 router.get('/api/ml', (req, res)=>{
 
     let runPy = new Promise( (success, nosuccess) => {
