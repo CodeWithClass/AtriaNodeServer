@@ -32,7 +32,6 @@ const AccessToken = (withingscode, firebaseUID) =>{
 
     return rp(requestData)
         .then((resBody) => {
-            console.log(resBody)
             return WriteToDb(firebaseUID, resBody)
         })
         .catch((err) => {

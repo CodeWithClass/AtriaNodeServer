@@ -85,12 +85,11 @@ router.get("/api/withings/fetchdata", (req, res) => {
 router.get("/api/fitbit/auth", (req, res) => {
   let AccessCode = req.query.code;
   let uid = req.query.state;
-  if (AccessCode) {
-    fitbitAuth
-      .AccessToken(AccessCode, uid)
+    // console.log('enpoint called');
 
+  if (AccessCode) {
+    fitbitAuth.AccessToken(AccessCode, uid)
       .then(resp => {
-        console.log(resp);
         if (resp.fbstatus === 200)
           res.sendFile("success.html", {
             root: path.join(__dirname, "../public/fitbitAuth")
@@ -101,13 +100,49 @@ router.get("/api/fitbit/auth", (req, res) => {
           });
       })
       .catch(err => {
-        console.log(err);
+        // console.log(err);
       });
   } else {
     res.sendFile("failure.html", {
       root: path.join(__dirname, "../public/fitbitAuth")
     });
   }
+});
+
+router.get("/api/fitbit/refresh_token", (req, res) => {
+    let refToken = req.query.RefreshToken;
+    let uid = req.query.Uid;
+    fitbitAuth
+        .RefreshToken(refToken, uid)
+
+        .then(resp => {
+            res.json({
+                resp
+            });
+        })
+        .catch(err => {
+            console.log(err);
+        });
+});
+
+router.get("/api/fibit/fetchdata", (req, res) => {
+    let accesstoken = req.query.access_token;
+    let uid = req.query.Uid;
+    let date = req.query.date;
+
+    res.json({
+        message: "hiii"
+    });
+    // fibitData
+    //     .getBPData(accesstoken, uid, date)
+    //     .then(resp => {
+    //         res.json({
+    //             response: resp
+    //         });
+    //     })
+    //     .catch(err => {
+    //         console.log(err);
+    //     });
 });
 
 // ============================ ML ============================
