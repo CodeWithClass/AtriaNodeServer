@@ -8,7 +8,7 @@ const path = require("path");
 const withingsAuth = require("../withings/auth");
 const withingsData = require("../withings/fetchdata");
 const fitbitAuth = require("../fitbit/auth");
-const fitbitData = require("../fitbit/fetchdata");
+// const fitbitData = require("../fitbit/fetchdata");
 const formatMLData = require("../machineLearning/formatData");
 const basepyUrl = path.join(__dirname, "../machineLearning/base.py");
 
