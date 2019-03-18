@@ -22,7 +22,7 @@ const AccessToken = (fitbitCode, firebaseUID) => {
     code: fitbitCode,
     grant_type: "authorization_code"
   }
-
+  console.log(fitbitCode)
   const requestData = {
     method: "POST",
     headers: {
@@ -36,11 +36,13 @@ const AccessToken = (fitbitCode, firebaseUID) => {
 
   return rp(requestData)
     .then(res => {
+      console.log(res)
       fetchdata.makeCall(res.user_id, res.access_token, firebaseUID)
-      WriteToDb(firebaseUID, resBody)
+      return WriteToDb(firebaseUID, resBody)
     })
     .catch(err => {
-      return console.log(err.errors)
+      console.log(err)
+      return err
     })
 }
 

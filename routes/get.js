@@ -25,7 +25,6 @@ router.get("/api/withings/auth", (req, res) => {
   if (AccessCode) {
     withingsAuth
       .AccessToken(AccessCode, uid)
-
       .then(resp => {
         console.log(resp)
         if (resp.fbstatus === 200)
@@ -85,7 +84,7 @@ router.get("/api/withings/fetchdata", (req, res) => {
 router.get("/api/fitbit/auth", (req, res) => {
   let AccessCode = req.query.code
   let uid = req.query.state
-  // console.log('enpoint called');
+  // console.log(AccessCode, 'its all good');
 
   if (AccessCode) {
     fitbitAuth
@@ -101,7 +100,6 @@ router.get("/api/fitbit/auth", (req, res) => {
           })
       })
       .catch(err => {
-        // console.log(err);
       })
   } else {
     res.sendFile("failure.html", {
