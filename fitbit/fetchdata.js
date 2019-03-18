@@ -5,7 +5,7 @@ const auth = require("./auth")
 
 const db = firebase.database()
 
-const makeCall = (fitbitUID, accessToken, firebaseUID, date = null, refreshToken = null) => {
+const makeCall = (fitbitUID, accessToken, firebaseUID, date = null) => {
   if (!date)
     date =
       fullDate.getFullYear() +
@@ -35,8 +35,6 @@ const makeCall = (fitbitUID, accessToken, firebaseUID, date = null, refreshToken
     .then(res => {
       if (res.statusCode === 200)
         return WriteToDb(firebaseUID, date, res.body)
-      if (res.statusCode === 401)
-        return auth.RefreshToken(refreshToken, firebaseUID)
       return res
     })
     .catch(err => {
