@@ -18,7 +18,7 @@ const makeCall = (fitbitUID, accessToken, firebaseUID, date = null) => {
     "https://api.fitbit.com/1/user/" +
     fitbitUID +
     "/activities/date/" +
-    date + 
+    date +
     ".json"
 
   const requestData = {
@@ -28,14 +28,15 @@ const makeCall = (fitbitUID, accessToken, firebaseUID, date = null) => {
     },
     uri: dataURL,
     json: true, // Automatically stringifies the body to JSON
-    resolveWithFullResponse: true, 
+    resolveWithFullResponse: true
   }
 
   return rp(requestData)
     .then(res => {
       if (res.statusCode === 200)
         return WriteToDb(firebaseUID, date, res.body)
-      return res
+      else
+        return res
     })
     .catch(err => {
       return err.response
