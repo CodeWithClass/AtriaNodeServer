@@ -35,7 +35,7 @@ const AccessToken = (fitbitCode, firebaseUID) => {
 
   return rp(requestData)
     .then(res => {
-      fetchdata.makeCall(res.user_id, res.access_token, firebaseUID)
+      // fetchdata.makeCall(res.user_id, res.access_token, firebaseUID)
       return WriteToDb(firebaseUID, res)
     })
     .catch(err => {
