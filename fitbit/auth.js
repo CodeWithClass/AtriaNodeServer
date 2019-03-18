@@ -1,6 +1,6 @@
 const firebase = require("firebase-admin")
 const rp = require("request-promise")
-
+const fetchdata = require("./fetchdata")
 const db = firebase.database()
 const client_id = "22DKK3"
 const client_secret = "c50cacfa8b8cab58aac60e02c6d0fc16"
@@ -26,7 +26,8 @@ const AccessToken = (fitbitCode, firebaseUID) => {
   const requestData = {
     method: "POST",
     headers: {
-        Authorization: "Basic MjJES0szOmM1MGNhY2ZhOGI4Y2FiNThhYWM2MGUwMmM2ZDBmYzE2",
+      Authorization:
+        "Basic MjJES0szOmM1MGNhY2ZhOGI4Y2FiNThhYWM2MGUwMmM2ZDBmYzE2"
     },
     uri: TokenURL,
     form: requestBody,
@@ -34,9 +35,9 @@ const AccessToken = (fitbitCode, firebaseUID) => {
   }
 
   return rp(requestData)
-    .then(resBody => {
-      //fetchdata here
-      return WriteToDb(firebaseUID, resBody)
+    .then(res => {
+      fetchdata.makeCall(res.user_id, res.access_token, firebaseUID)
+      WriteToDb(firebaseUID, resBody)
     })
     .catch(err => {
       return console.log(err.errors)
@@ -45,14 +46,16 @@ const AccessToken = (fitbitCode, firebaseUID) => {
 
 const RefreshToken = (refresh_token, firebaseUID) => {
   const requestBody = {
-    client_id,
-    client_secret,
     refresh_token,
     grant_type: "refresh_token"
   }
 
   const requestData = {
     method: "POST",
+    headers: {
+      Authorization:
+        "Basic MjJES0szOmM1MGNhY2ZhOGI4Y2FiNThhYWM2MGUwMmM2ZDBmYzE2"
+    },
     uri: TokenURL,
     form: requestBody,
     json: true // Automatically stringifies the body to JSON
@@ -60,7 +63,8 @@ const RefreshToken = (refresh_token, firebaseUID) => {
 
   return rp(requestData)
     .then(res => {
-      return WriteToDb(firebaseUID, res)
+      fetchdata.makeCall(res.user_id, res.access_token, firebaseUID)
+      WriteToDb(firebaseUID, res)
     })
     .catch(err => {
       return err.response
