@@ -148,7 +148,6 @@ router.get("/api/fitbit/fetchdata", (req, res) => {
 router.get("/api/fitbit/webhook", (req, res) => { 
   if (req.query.verify === verificationCode)
     res.status(204).send()
-  console.log("theres an error verifying webhook", req.query)
   res.status(404).send()
 })
 
