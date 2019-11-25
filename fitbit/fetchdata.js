@@ -5,7 +5,7 @@ const auth = require("./auth")
 
 const db = firebase.database()
 
-const makeCall = (fitbitUID, accessToken, firebaseUID, date = null) => {
+const fetchData = (fitbitUID, accessToken, firebaseUID, date = null) => {
   if (!date)
     date =
       fullDate.getFullYear() +
@@ -52,4 +52,4 @@ const WriteToDb = (firebaseUID, date, fitbitData = {}) => {
     resolve(fitbitData)
   })
 }
-module.exports = { makeCall }
+module.exports = { fetchData }

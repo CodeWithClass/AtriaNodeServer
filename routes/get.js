@@ -9,11 +9,12 @@ const withingsAuth = require("../withings/auth")
 const withingsData = require("../withings/fetchdata")
 const fitbitAuth = require("../fitbit/auth")
 const fitbitData = require("../fitbit/fetchdata")
+const fibitSubscribe = require("../fitbit/subscribe")
 const formatMLData = require("../machineLearning/formatData")
 const basepyUrl = path.join(__dirname, "../machineLearning/base.py")
 
 // =============================== Withings ================================>
-router.get("/api/withings", (req, res) => {
+router.get("/api/say_hi", (req, res) => {
   res.json({
     message: "welcome"
   })
@@ -132,11 +133,32 @@ router.get("/api/fitbit/fetchdata", (req, res) => {
   const date = req.query.date
 
   fitbitData
-    .makeCall(fitbitUID, accessToken, firebaseUID, date, refreshToken)
+    .fetchData(fitbitUID, accessToken, firebaseUID, date, refreshToken)
     .then(resp => {
         res.json({
           "response": resp
         })
+    })
+    .catch(err => {
+      console.log(err)
+    })
+})
+
+//allow fitbit to verify server
+router.get("/api/fitbit/webhook", (req, res) => { 
+  if (req.query.verify === "correctVerificationCode")
+    res.status(204).send()
+  res.status(404).send()
+})
+
+router.get("/api/fitbit/subscribe-for-updates", (req, res) => {
+  const { firebaseUID, subscriptionId } = req.query
+  fibitSubscribe
+    .AddSubscriber(firebaseUID, subscriptionId)
+    .then(response => {
+      res.json({
+        response
+      })
     })
     .catch(err => {
       console.log(err)
