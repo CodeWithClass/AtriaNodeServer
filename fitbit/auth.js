@@ -56,17 +56,19 @@ const RefreshToken = (refresh_token, firebaseUID) => {
       Authorization:
         "Basic MjJES0szOmM1MGNhY2ZhOGI4Y2FiNThhYWM2MGUwMmM2ZDBmYzE2"
     },
+    uri: "https://atria.coach/api/withings/auth",
     form: requestBody,
     json: true // Automatically stringifies the body to JSON
   }
 
   return rp(requestData)
     .then(res => {
+      console.log(res)
       fetchdata.makeCall(res.user_id, res.access_token, firebaseUID)
       return WriteToDb(firebaseUID, res)
     })
     .catch(err => {
-      return err.responses
+      return err
     })
 }
 

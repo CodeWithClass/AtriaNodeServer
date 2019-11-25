@@ -7,7 +7,7 @@ const checkauth = require('./checkauth')
 // =============================== Withings ================================>
 router.post('/api/withings/auth', (req, res) => {
     res.json({
-        message: 'welcome to post'
+        message: req
     })
 })
 
