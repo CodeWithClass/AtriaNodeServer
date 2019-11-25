@@ -63,10 +63,10 @@ const RefreshToken = (refresh_token, firebaseUID) => {
   return rp(requestData)
     .then(res => {
       fetchdata.makeCall(res.user_id, res.access_token, firebaseUID)
-      WriteToDb(firebaseUID, res)
+      return WriteToDb(firebaseUID, res)
     })
     .catch(err => {
-      return err.response
+      return err.responses
     })
 }
 

@@ -110,10 +110,11 @@ router.get("/api/fitbit/auth", (req, res) => {
 })
 
 router.get("/api/fitbit/refresh_token", (req, res) => {
-  let refToken = req.query.RefreshToken
-  let firebaseUID = req.query.Uid
+
+  const { refreshToken, firebaseUID } = req.query
+
   fitbitAuth
-    .RefreshToken(refToken, firebaseUID)
+    .RefreshToken(refreshToken, firebaseUID)
 
     .then(resp => {
       res.json({
