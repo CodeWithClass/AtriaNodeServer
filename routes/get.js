@@ -113,7 +113,7 @@ router.get("/api/fitbit/refresh_token", (req, res) => {
   let refToken = req.query.RefreshToken
   let firebaseUID = req.query.Uid
   fitbitAuth
-    .RefreshToken(refToken, uid)
+    .RefreshToken(refToken, firebaseUID)
 
     .then(resp => {
       res.json({

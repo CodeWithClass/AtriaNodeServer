@@ -1,7 +1,7 @@
 const rp = require("request-promise")
 
 
-const AddSubscriber = ( firebaseUID, subscriptionId) => {
+const AddSubscriber = subscriptionId => {
 
   const requestData = {
     method: "POST",
@@ -9,8 +9,8 @@ const AddSubscriber = ( firebaseUID, subscriptionId) => {
     uri: "https://api.fitbit.com/1/user/-/apiSubscriptions/"+subscriptionId+".json",
   }
 
-  return rp(requestData)
-    .then(res => {return res})
+   rp(requestData)
+    .then(res => { console.log(res)})
     .catch(err => {
       console.log(err)
       return err

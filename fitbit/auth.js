@@ -1,6 +1,7 @@
 const firebase = require("firebase-admin")
 const rp = require("request-promise")
 const fetchdata = require("./fetchdata")
+const fitbitSubscribe = require("./subscribe")
 const db = firebase.database()
 const client_id = "22DKK3"
 const client_secret = "c50cacfa8b8cab58aac60e02c6d0fc16"
@@ -55,7 +56,6 @@ const RefreshToken = (refresh_token, firebaseUID) => {
       Authorization:
         "Basic MjJES0szOmM1MGNhY2ZhOGI4Y2FiNThhYWM2MGUwMmM2ZDBmYzE2"
     },
-    uri: TokenURL,
     form: requestBody,
     json: true // Automatically stringifies the body to JSON
   }
