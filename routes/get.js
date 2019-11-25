@@ -12,7 +12,7 @@ const fitbitData = require("../fitbit/fetchdata")
 const fibitSubscribe = require("../fitbit/subscribe")
 const formatMLData = require("../machineLearning/formatData")
 const basepyUrl = path.join(__dirname, "../machineLearning/base.py")
-
+const verificationCode = "42ca309719f9695e4824043d3788ea2f41a74cb9396d89012cb846065166f24e"
 // =============================== Withings ================================>
 router.get("/api/say_hi", (req, res) => {
   res.json({
@@ -146,9 +146,9 @@ router.get("/api/fitbit/fetchdata", (req, res) => {
 
 //allow fitbit to verify server
 router.get("/api/fitbit/webhook", (req, res) => { 
-  if (req.query.verify === "correctVerificationCode")
+  if (req.query.verify === verificationCode)
     res.status(204).send()
-  console.log("theres an error verifying webhook", req)
+  console.log("theres an error verifying webhook", req.query)
   res.status(404).send()
 })
 
@@ -165,6 +165,10 @@ router.get("/api/fitbit/subscribe-for-updates", (req, res) => {
       console.log(err)
     })
 })
+
+
+
+
 
 // ============================ ML ============================
 
