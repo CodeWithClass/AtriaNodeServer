@@ -12,8 +12,8 @@ const AddSubscriber = (subscriptionId, accessToken) => {
   }
 
    return rp(requestData)
-    .then(res => console.log(res))
-    .catch(err => console.log(err))
+    .then(() => {})
+    .catch(err => console.log(err.body))
 }
 
 
