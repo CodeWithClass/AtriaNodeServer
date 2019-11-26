@@ -33,12 +33,14 @@ const AccessToken = (fitbitCode, firebaseUID) => {
     json: true // Automatically stringifies the body to JSON
   }
   
+
   return rp(requestData)
-    .then(authRes => WriteToDb(firebaseUID, authRes))
-    // .then(()=>
-    //   fitbitSubscribe.AddSubscriber(firebaseUID)
-    //     .then(subRes => WriteToDb(firebaseUID, subRes))
-    // )
+    .then(authRes => {
+      fitbitSubscribe.AddSubscriber(firebaseUID, authRes.access_token)
+        .then(subRes => WriteToDb(firebaseUID, authRes, subRes))
+        .catch(err=>console.log("subscribe err: ", err))
+    })
+   
     .catch(err => {
       console.log(err)
       return err
@@ -72,13 +74,13 @@ const RefreshToken = (refresh_token, firebaseUID) => {
     })
 }
 
-const WriteToDb = (firebaseUID, data) => {
+const WriteToDb = (firebaseUID, authRes, subRes) => {
   return new Promise((resolve, reject) => {
     let user = db.ref("users/" + firebaseUID)
     user.update({
-      fitbitAuth: data
+      fitbitAuth: { ...authRes, ...subRes }
     })
-    resolve({ fbstatus: 200, data: data })
+    resolve({ fbstatus: 200, data: { ...authRes, ...subRes }})
     reject({ fbstatus: 401, data: "firebase write has failed" })
   })
 }

@@ -1,11 +1,13 @@
 const rp = require("request-promise")
 
 
-const AddSubscriber = subscriptionId => {
+const AddSubscriber = (subscriptionId, accessToken) => {
 
   const requestData = {
     method: "POST",
-    headers: {},
+    headers: {
+      Authorization: "Bearer " + accessToken
+    },
     uri: "https://api.fitbit.com/1/user/-/apiSubscriptions/"+subscriptionId+".json",
   }
 
