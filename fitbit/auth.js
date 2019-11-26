@@ -74,9 +74,9 @@ const RefreshToken = (refresh_token, firebaseUID) => {
 
 const WriteToDb = (firebaseUID, data) => {
   return new Promise((resolve, reject) => {
-    let user = db.ref("users/" + firebaseUID + "/fitbitAuth")
+    let user = db.ref("users/" + firebaseUID)
     user.update({
-      data
+      fitbitAuth: data
     })
     resolve({ fbstatus: 200, data: AuthObj })
     reject({ fbstatus: 401, data: "unknown err" })
