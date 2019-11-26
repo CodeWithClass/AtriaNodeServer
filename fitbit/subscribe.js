@@ -13,7 +13,7 @@ const AddSubscriber = (subscriptionId, accessToken) => {
 
    return rp(requestData)
     .then(() => {})
-    .catch(err => console.log(err.body))
+    .catch(err => console.log(err))
 }
 
 

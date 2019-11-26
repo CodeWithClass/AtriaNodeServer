@@ -42,7 +42,7 @@ const AccessToken = (fitbitCode, firebaseUID) => {
     })
    
     .catch(err => {
-      console.log(err.body)
+      console.log(err)
       return err
     })
 }
