@@ -6,21 +6,22 @@ const auth = require("./auth")
 const db = firebase.database()
 
 const fetchData = (fitbitUID, accessToken, firebaseUID, date = null) => {
-  if (!date)
+  if (!date){
+    const fullDate = new Date()
     date =
       fullDate.getFullYear() +
       "-" +
       (fullDate.getMonth() + 1) +
       "-" +
       fullDate.getDate()
-
+  }
   const dataURL =
     "https://api.fitbit.com/1/user/" +
     fitbitUID +
     "/activities/date/" +
     date +
     ".json"
-
+  
   const requestData = {
     method: "GET",
     headers: {
@@ -47,7 +48,7 @@ const WriteToDb = (firebaseUID, date, fitbitData = {}) => {
   return new Promise((resolve, reject) => {
     let user = db.ref("users/" + firebaseUID + "/dailyStats/" + date.toString())
     user.update({
-      fitbit: fitbitData
+      activity: fitbitData
     })
     resolve(fitbitData)
   })

@@ -9,7 +9,6 @@ const base64 = "MjJES0szOmM1MGNhY2ZhOGI4Y2FiNThhYWM2MGUwMmM2ZDBmYzE2"
 const redirect_uri = "https://atria.coach/api/fitbit/auth"
 const scope =
   "activity%20heartrate%20location%20nutrition%20profile%20settings%20sleep%20social%20weight"
-const expires_in = "604800"
 const response_type = "code"
 const TokenURL = "https://api.fitbit.com/oauth2/token"
 // const redirect_uri = "https://atria.coach/api/fitbit/fetchdata"
@@ -33,11 +32,13 @@ const AccessToken = (fitbitCode, firebaseUID) => {
     form: requestBody,
     json: true // Automatically stringifies the body to JSON
   }
-
+  
   return rp(requestData)
-    .then(res => {
-      return WriteToDb(firebaseUID, res)
-    })
+    .then(authRes => WriteToDb(firebaseUID, authRes))
+    .then(()=>
+      fitbitSubscribe.AddSubscriber(firebaseUID)
+        .then(subRes => WriteToDb(firebaseUID, subRes))
+    )
     .catch(err => {
       console.log(err)
       return err
@@ -56,15 +57,14 @@ const RefreshToken = (refresh_token, firebaseUID) => {
       Authorization:
         "Basic MjJES0szOmM1MGNhY2ZhOGI4Y2FiNThhYWM2MGUwMmM2ZDBmYzE2"
     },
-    uri: "https://atria.coach/api/withings/auth",
+    uri: TokenURL,
     form: requestBody,
     json: true // Automatically stringifies the body to JSON
   }
 
   return rp(requestData)
     .then(res => {
-      console.log(res)
-      fetchdata.makeCall(res.user_id, res.access_token, firebaseUID)
+      fetchdata.fetchData(res.user_id, res.access_token, firebaseUID)
       return WriteToDb(firebaseUID, res)
     })
     .catch(err => {
@@ -72,11 +72,11 @@ const RefreshToken = (refresh_token, firebaseUID) => {
     })
 }
 
-const WriteToDb = (firebaseUID, AuthObj) => {
+const WriteToDb = (firebaseUID, data) => {
   return new Promise((resolve, reject) => {
-    let user = db.ref("users/" + firebaseUID)
+    let user = db.ref("users/" + firebaseUID + "/fitbitAuth")
     user.update({
-      fitbitAuth: AuthObj
+      data
     })
     resolve({ fbstatus: 200, data: AuthObj })
     reject({ fbstatus: 401, data: "unknown err" })
