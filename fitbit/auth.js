@@ -40,7 +40,7 @@ const AccessToken = (fitbitCode, firebaseUID) => {
         // .then(subRes => 
           WriteToDb(firebaseUID, authRes)
           // )
-        .catch(err=>console.log("subscribe err: ", err))
+        // .catch(err=>console.log("subscribe err: ", err))
     })
    
     .catch(err => {
