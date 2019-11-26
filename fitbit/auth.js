@@ -78,8 +78,8 @@ const WriteToDb = (firebaseUID, data) => {
     user.update({
       fitbitAuth: data
     })
-    resolve({ fbstatus: 200, data: AuthObj })
-    reject({ fbstatus: 401, data: "unknown err" })
+    resolve({ fbstatus: 200, data: data })
+    reject({ fbstatus: 401, data: "firebase write has failed" })
   })
 }
 
