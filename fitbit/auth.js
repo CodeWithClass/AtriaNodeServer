@@ -78,11 +78,10 @@ const RefreshToken = (refresh_token, firebaseUID) => {
 
 const WriteToDb = (firebaseUID, authRes = {}, subRes = {}) => {
   return new Promise((resolve, reject) => {
-    let user = db.ref("users/" + firebaseUID + "/fitbitAuth")
+    let user = db.ref("users/" + firebaseUID)
     console.log(subRes)
     user.update({
-      authRes: authRes,
-      subRes: subRes
+      fitbitAuth: { ...authRes, ...subRes }
     })
     resolve({ fbstatus: 200, data: { authRes, subRes }})
     reject({ fbstatus: 401, data: "firebase write has failed" })
