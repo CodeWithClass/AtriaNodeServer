@@ -1,8 +1,7 @@
-const firebase = require("firebase-admin")
 const rp = require("request-promise")
 const { fetchData } = require("./fetchdata")
 const { AddSubscriber } = require("./subscribe")
-const db = firebase.database()
+const { WriteToDb, RemoveFromDb } = require('../helpers/db-helpers')
 const client_id = "22DKK3"
 const client_secret = "c50cacfa8b8cab58aac60e02c6d0fc16"
 const base64 = "MjJES0szOmM1MGNhY2ZhOGI4Y2FiNThhYWM2MGUwMmM2ZDBmYzE2"
@@ -67,7 +66,7 @@ const RefreshAndFetch = (firebaseUID, refresh_token, category) => {
 
   return rp(requestData)
     .then(res => {
-      WriteToDb(firebaseUID, res)
+      WriteToDb(firebaseUID, ...res, 'fitbitAuth', '')
       return fetchData(res.user_id, res.access_token, firebaseUID, category)
     })
     .catch(err => {
@@ -92,31 +91,11 @@ const RevokeToken = (token, firebaseUID) =>{
 
   return rp(requestData)
     .then(() => {
-      return RemoveFromDb(firebaseUID, "fitbitAuth")
+      return RemoveFromDb(firebaseUID, 'fitbitAuth')
     })
     .catch(err => {
       return err
     })
-}
-
-const WriteToDb = (firebaseUID, authRes = {}, subRes = {}) => {
-  return new Promise((resolve, reject) => {
-    let user = db.ref("users/" + firebaseUID)
-    user.update({
-      fitbitAuth: { ...authRes, ...subRes }
-    })
-    resolve({ fbstatus: 200, data: { authRes, subRes }})
-    reject({ fbstatus: 401, data: "firebase write has failed" })
-  })
-}
-
-const RemoveFromDb = (firebaseUID, toBeRemoved) => {
-  return new Promise((resolve, reject) => {
-    let user = db.ref("users/" + firebaseUID)
-    user.child(toBeRemoved).remove()
-    resolve({ fbstatus: 200, data: { "removed: ": toBeRemoved } })
-    reject({ fbstatus: 401, data: "firebase write has failed" })
-  })
 }
 
 module.exports = { AccessToken, RefreshAndFetch, RevokeToken }

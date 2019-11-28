@@ -30,7 +30,7 @@ const ReadFromDb = (firebaseUID, path = "") => {
   })
 }
 
-const RemoveFromDb = (firebaseUID, path = "", toBeRemoved) => {
+const RemoveFromDb = (firebaseUID, toBeRemoved, path = "") => {
   return new Promise((resolve, reject) => {
     let user = db.ref("users/" + firebaseUID + path)
     user.child(toBeRemoved).remove()
