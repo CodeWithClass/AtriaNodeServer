@@ -50,7 +50,7 @@ const AccessToken = (fitbitCode, firebaseUID) => {
     })
 }
 
-const RefreshAndFetch = (refresh_token, firebaseUID) => {
+const RefreshAndFetch = (firebaseUID, refresh_token, category) => {
   const requestBody = {
     refresh_token,
     grant_type: "refresh_token"
@@ -71,7 +71,7 @@ const RefreshAndFetch = (refresh_token, firebaseUID) => {
   return rp(requestData)
     .then(res => {
       WriteToDb(firebaseUID, res)
-      return fetchdata.fetchData(res.user_id, res.access_token, firebaseUID)
+      return fetchdata.fetchData(res.user_id, res.access_token, firebaseUID, category)
     })
     .catch(err => {
       return err

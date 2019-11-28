@@ -1,12 +1,8 @@
-const firebase = require("firebase-admin")
-const serviceAccount = require("../firebase/adminsdk.json")
 const rp = require("request-promise")
-const auth = require("./auth")
+const dbHelper = require('../helpers/db-helpers')
 
-const db = firebase.database()
-
-const fetchData = (fitbitUID, accessToken, firebaseUID, date = null) => {
-  if (!date){
+const fetchData = (fitbitUID, accessToken, firebaseUID, category, date = null) => {
+  if (!date) {
     const fullDate = new Date()
     date =
       fullDate.getFullYear() +
@@ -16,11 +12,7 @@ const fetchData = (fitbitUID, accessToken, firebaseUID, date = null) => {
       fullDate.getDate()
   }
   const dataURL =
-    "https://api.fitbit.com/1/user/" +
-    fitbitUID +
-    "/activities/date/" +
-    date +
-    ".json"
+    `https://api.fitbit.com/1/user/${fitbitUID}/${category}/date/${date}.json`
   
   const requestData = {
     method: "GET",
@@ -32,10 +24,14 @@ const fetchData = (fitbitUID, accessToken, firebaseUID, date = null) => {
     resolveWithFullResponse: true
   }
 
+  const firebasePath = `dailyStats/${date}`
+  
   return rp(requestData)
     .then(res => {
-      if (res.statusCode === 200)
-        return WriteToDb(firebaseUID, date, res.body)
+      if (res.statusCode === 200){
+        console.log('doing it', res.statusCode)
+        return dbHelper.WriteToDb(firebaseUID, firebasePath, key, res.body)
+      }
       else
         return res
     })
@@ -44,13 +40,4 @@ const fetchData = (fitbitUID, accessToken, firebaseUID, date = null) => {
     })
 }
 
-const WriteToDb = (firebaseUID, date, fitbitData = {}) => {
-  return new Promise((resolve, reject) => {
-    let user = db.ref("users/" + firebaseUID + "/dailyStats/" + date.toString())
-    user.update({
-      activity: fitbitData
-    })
-    resolve(fitbitData)
-  })
-}
 module.exports = { fetchData }

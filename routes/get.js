@@ -108,9 +108,9 @@ router.get("/api/fitbit/auth", (req, res) => {
 })
 
 router.get("/api/fitbit/fetchdata", (req, res) => {
-  const { refresh_token, firebaseUID } = req.query
+  const { firebaseUID, refresh_token, category} = req.query
   fitbitAuth
-    .RefreshAndFetch(refresh_token, firebaseUID)
+    .RefreshAndFetch(firebaseUID, refresh_token, category)
     .then(resp => {
       res.json({
         response: resp

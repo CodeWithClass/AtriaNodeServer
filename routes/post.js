@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const jwt = require('jsonwebtoken');
-const checkauth = require('./checkauth')
+const fitbitData = require("../fitbit/fetchdata")
+
 
 
 // =============================== Withings ================================>
@@ -15,7 +15,7 @@ router.post('/api/withings/auth', (req, res) => {
 // =============================== fitbit ================================>
 
 router.post("/api/fitbit/webhook", (req, res) => {
-    console.log(req)
+    console.log(req.body)
     res.status(204).send()
 })
 
