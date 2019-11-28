@@ -66,7 +66,7 @@ const RefreshAndFetch = (firebaseUID, refresh_token, category) => {
 
   return rp(requestData)
     .then(res => {
-      WriteToDb(firebaseUID, ...res, 'fitbitAuth', '')
+      WriteToDb(firebaseUID, res, 'fitbitAuth', '')
       return fetchData(res.user_id, res.access_token, firebaseUID, category)
     })
     .catch(err => {
@@ -91,7 +91,7 @@ const RevokeToken = (token, firebaseUID) =>{
 
   return rp(requestData)
     .then(() => {
-      return RemoveFromDb(firebaseUID, 'fitbitAuth')
+      return RemoveFromDb(firebaseUID, 'fitbitAuth', '')
     })
     .catch(err => {
       return err
