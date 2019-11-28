@@ -1,5 +1,5 @@
 const rp = require("request-promise")
-const dbHelper = require('../helpers/db-helpers')
+const { WriteToDb } = require('../helpers/db-helpers')
 
 const fetchData = (fitbitUID, accessToken, firebaseUID, category, date = null) => {
   if (!date) {
@@ -24,14 +24,12 @@ const fetchData = (fitbitUID, accessToken, firebaseUID, category, date = null) =
     resolveWithFullResponse: true
   }
 
-  const firebasePath = `dailyStats/${date}`
+  const firebasePath = `/dailyStats/${date}`
   
   return rp(requestData)
     .then(res => {
-      if (res.statusCode === 200){
-        console.log('doing it', res.statusCode)
-        return dbHelper.WriteToDb(firebaseUID, firebasePath, key, res.body)
-      }
+      if (res.statusCode === 200)
+        return WriteToDb(firebaseUID, res.body, category, firebasePath)
       else
         return res
     })

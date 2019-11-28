@@ -1,8 +1,7 @@
 const firebase = require("firebase-admin")
 const db = firebase.database()
 
-const WriteToDb = (firebaseUID, path = "", key, data) => {
-  console.log('path:', path, 'data',data)
+const WriteToDb = (firebaseUID, data, key, path= "") => {
   return new Promise((resolve, reject) => {
     let user = db.ref("users/" + firebaseUID + path)
     user.update({
