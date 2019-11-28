@@ -83,7 +83,7 @@ router.get("/api/withings/fetchdata", (req, res) => {
 router.get("/api/fitbit/auth", (req, res) => {
   let AccessCode = req.query.code
   let uid = req.query.state
-  // console.log(AccessCode, 'its all good');
+  console.log(res.body)
 
   if (AccessCode) {
     fitbitAuth
