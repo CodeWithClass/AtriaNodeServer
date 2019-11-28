@@ -8,8 +8,6 @@ const path = require("path")
 const withingsAuth = require("../withings/auth")
 const withingsData = require("../withings/fetchdata")
 const fitbitAuth = require("../fitbit/auth")
-const fitbitData = require("../fitbit/fetchdata")
-const fibitSubscribe = require("../fitbit/subscribe")
 const formatMLData = require("../machineLearning/formatData")
 const basepyUrl = path.join(__dirname, "../machineLearning/base.py")
 const verificationCode = "42ca309719f9695e4824043d3788ea2f41a74cb9396d89012cb846065166f24e"
@@ -47,21 +45,21 @@ router.get("/api/withings/auth", (req, res) => {
   }
 })
 
-router.get("/api/withings/refresh_token", (req, res) => {
-  let refToken = req.query.RefreshToken
-  let uid = req.query.Uid
-  withingsAuth
-    .RefreshToken(refToken, uid)
+// router.get("/api/withings/refresh_token", (req, res) => {
+//   let refToken = req.query.RefreshToken
+//   let uid = req.query.Uid
+//   withingsAuth
+//     .RefreshToken(refToken, uid)
 
-    .then(resp => {
-      res.json({
-        resp
-      })
-    })
-    .catch(err => {
-      console.log(err)
-    })
-})
+//     .then(resp => {
+//       res.json({
+//         resp
+//       })
+//     })
+//     .catch(err => {
+//       console.log(err)
+//     })
+// })
 
 router.get("/api/withings/fetchdata", (req, res) => {
   let accesstoken = req.query.access_token
@@ -110,9 +108,9 @@ router.get("/api/fitbit/auth", (req, res) => {
 })
 
 router.get("/api/fitbit/fetchdata", (req, res) => {
-  const { refreshToken, firebaseUID } = req.query
+  const { refresh_token, firebaseUID } = req.query
   fitbitAuth
-    .RefreshToken(refreshToken, firebaseUID)
+    .RefreshAndFetch(refresh_token, firebaseUID)
     .then(resp => {
       res.json({
         response: resp
@@ -131,10 +129,11 @@ router.get("/api/fitbit/webhook", (req, res) => {
   res.status(404).send()
 })
 
-router.get("/api/fitbit/subscribe-for-updates", (req, res) => {
-  const { firebaseUID, subscriptionId } = req.query
-  fibitSubscribe
-    .AddSubscriber(firebaseUID, subscriptionId)
+router.get("/api/fitbit/revoketoken", (req, res) => {
+  //refresh or access token, doesn't matter
+  const { token, firebaseUID } = req.query
+  fitbitAuth
+    .RevokeToken(token, firebaseUID)
     .then(response => {
       res.json({
         response
