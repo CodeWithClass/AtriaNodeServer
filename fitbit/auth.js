@@ -34,9 +34,10 @@ const AccessToken = (fitbitCode, firebaseUID) => {
   
   return rp(requestData)
     .then(authRes => {
+      //after accesstoken is received subscribe for updates
       return AddSubscriber(firebaseUID, authRes.access_token)
         .then(subRes => {
-          return WriteToDb(firebaseUID, authRes, subRes)
+          return WriteToDb(firebaseUID, {... authRes, ... subRes}, 'fitbitAuth', '')
         })
         .catch(err=>console.log("subscribe err: ", err))
     })
