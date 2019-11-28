@@ -45,21 +45,21 @@ router.get("/api/withings/auth", (req, res) => {
   }
 })
 
-// router.get("/api/withings/refresh_token", (req, res) => {
-//   let refToken = req.query.RefreshToken
-//   let uid = req.query.Uid
-//   withingsAuth
-//     .RefreshToken(refToken, uid)
+router.get("/api/withings/refresh_token", (req, res) => {
+  let refToken = req.query.RefreshToken
+  let uid = req.query.Uid
+  withingsAuth
+    .RefreshToken(refToken, uid)
 
-//     .then(resp => {
-//       res.json({
-//         resp
-//       })
-//     })
-//     .catch(err => {
-//       console.log(err)
-//     })
-// })
+    .then(resp => {
+      res.json({
+        resp
+      })
+    })
+    .catch(err => {
+      console.log(err)
+    })
+})
 
 router.get("/api/withings/fetchdata", (req, res) => {
   let accesstoken = req.query.access_token
