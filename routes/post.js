@@ -18,9 +18,9 @@ router.post("/api/fitbit/webhook", (req, res) => {
     res.status(204).send()
 
     console.log(req.body[0].subscriptionId)
-    const { subscriptionId, collectionType, date}
+    const { subscriptionId, collectionType, date} = req.body
     const refresh_token = ReadFromDb(subscriptionId, '/fitbitAuth/refresh_token')
-    req.body
+    // req.body
 })
 
 module.exports = router
