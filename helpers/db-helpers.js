@@ -1,42 +1,31 @@
-const firebase = require("firebase-admin")
+const firebase = require('firebase-admin')
 const db = firebase.database()
 
-const WriteToDb = (firebaseUID, data, key, path= "") => {
+const WriteToDb = (firebaseUID, data, key, path = '') => {
   return new Promise((resolve, reject) => {
-    let user = db.ref("users/" + firebaseUID + path)
+    let user = db.ref('users/' + firebaseUID + path)
     user.update({
       [key]: data
     })
-    resolve({ fbstatus: 200, data: data })
-    reject({ fbstatus: 401, data: "firebase write has failed" })
+    resolve({ fbstatus: 200, body: data })
+    reject({ fbstatus: 401, body: 'firebase write has failed' })
   })
 }
-
-const ReadFromDb = (firebaseUID, path = "") => {
-  return new Promise((resolve, reject) => {
-    let user = db.ref("users/" + firebaseUID + path)
-    const data = user.on("value",  
-      (snapshot) => {
-        console.log(snapshot.val())
-        return (snapshot.val())
-      },
-      (error) => {
-        console.log(error)
-        reject({ fbstatus: 401, data: "firebase read has failed" })
-      }
-    )
-    resolve({ fbstatus: 200, data: data })
-    reject({ fbstatus: 401, data: "firebase read has failed" })
+const ReadFromDb = (firebaseUID, path = '') => {
+  let ref = db.ref('users/' + firebaseUID + path)
+  return ref.once('value', snapshot => {
+    return snapshot.val()
   })
+  //this returns a promise
 }
 
-const RemoveFromDb = (firebaseUID, toBeRemoved, path = "") => {
+const RemoveFromDb = (firebaseUID, toBeRemoved, path = '') => {
   return new Promise((resolve, reject) => {
-    let user = db.ref("users/" + firebaseUID + path)
+    let user = db.ref('users/' + firebaseUID + path)
     user.child(toBeRemoved).remove()
 
-    resolve({ fbstatus: 200, data: `${toBeRemoved} removed`})
-    reject({ fbstatus: 401, data: "firebase removal has failed" })
+    resolve({ fbstatus: 200, body: `${toBeRemoved} removed` })
+    reject({ fbstatus: 401, body: 'firebase removal has failed' })
   })
 }
 

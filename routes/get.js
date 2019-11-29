@@ -1,9 +1,6 @@
 const express = require("express")
 const app = express()
 const router = express.Router()
-// const jwt = require('jsonwebtoken')
-// const axios = require('axios');
-// var bodyParser = require('body-parser')
 const path = require("path")
 const withingsAuth = require("../withings/auth")
 const withingsData = require("../withings/fetchdata")
@@ -106,9 +103,9 @@ router.get("/api/fitbit/auth", (req, res) => {
 })
 
 router.get("/api/fitbit/fetchdata", (req, res) => {
-  const { firebaseUID, refresh_token, category} = req.query
+  const { firebaseUID, refresh_token, category, date} = req.query
   fitbitAuth
-    .RefreshAndFetch(firebaseUID, refresh_token, category)
+    .RefreshAndFetch(firebaseUID, refresh_token, category, date)
     .then(resp => {
       res.json({
         response: resp
