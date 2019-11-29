@@ -1,12 +1,8 @@
-const firebase = require('firebase-admin')
-var serviceAccount = require('../firebase/adminsdk.json');
-var rp = require('request-promise');
-
-
-const db = firebase.database();
+const rp = require('request-promise');
+const { WriteToDb } = require('../helpers/db-helpers')
 const dataURL = "https://wbsapi.withings.net/measure"
 
-var getBPData = (accesstoken, firebaseUID, date) =>{
+const getBPData = (accesstoken, firebaseUID, date) =>{
     const params = {
         action: "getmeas",
         access_token: accesstoken
@@ -31,7 +27,7 @@ var getBPData = (accesstoken, firebaseUID, date) =>{
         });
 }
 
-var ProcessData = (firebaseUID, date, dataObj = {})=>{
+const ProcessData = (firebaseUID, date, dataObj = {})=>{
     if (!dataObj.measuregrps)
         return dataObj
     
@@ -63,15 +59,6 @@ var ProcessData = (firebaseUID, date, dataObj = {})=>{
     
     let filteredData = formattedData.filter(element => element)
     
-    return WriteToDb(firebaseUID, date, filteredData)    
-}
-var WriteToDb = (firebaseUID, date, bpData = {},) => {
-    return new Promise((resolve, reject) => {
-        let user = db.ref('users/' + firebaseUID + '/dailyStats/' + date.toString())
-        user.update({
-            bp:  bpData
-        })
-        resolve(bpData)
-    })
+    return WriteToDb(firebaseUID, filteredData, 'bp', '/dailyStats/' + date.toString())    
 }
 module.exports = { getBPData}
