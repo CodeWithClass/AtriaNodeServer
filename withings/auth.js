@@ -23,8 +23,6 @@ const AccessToken = (withingscode, firebaseUID) => {
     json: true // Automatically stringifies the body to JSON
   }
 
-  console.log(...requestData)
-
   return rp(requestData)
     .then(resBody => {
       return WriteToDb(firebaseUID, resBody, 'withingsAuth')
