@@ -70,6 +70,7 @@ const RefreshAndFetch = (firebaseUID, refresh_token, category, date) => {
 
   return rp(requestData)
     .then(res => {
+      WriteToDb(firebaseUID, true, 'fitbitAuth', 'user')
       WriteToDb(firebaseUID, res, 'fitbitAuth', '')
       return fetchData(
         res.user_id,
