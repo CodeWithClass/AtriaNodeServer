@@ -3,7 +3,7 @@ const db = firebase.database()
 
 const WriteToDb = (firebaseUID, data, key, path = '') => {
   return new Promise((resolve, reject) => {
-    let user = db.ref('users/' + firebaseUID + path)
+    let user = db.ref('users/' + firebaseUID + '/' + path)
     user.update({
       [key]: data
     })
@@ -12,7 +12,7 @@ const WriteToDb = (firebaseUID, data, key, path = '') => {
   })
 }
 const ReadFromDb = (firebaseUID, path = '') => {
-  let ref = db.ref('users/' + firebaseUID + path)
+  let ref = db.ref('users/' + firebaseUID + '/' + path)
   return ref.once('value', snapshot => {
     return snapshot.val()
   })
