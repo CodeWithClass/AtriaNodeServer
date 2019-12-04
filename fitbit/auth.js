@@ -36,6 +36,8 @@ const AccessToken = (fitbitCode, firebaseUID) => {
       //after accesstoken is received subscribe for updates
       return AddSubscriber(firebaseUID, authRes.access_token)
         .then(subRes => {
+          WriteToDb(firebaseUID, true, 'fitbitAuth', 'user')
+
           return WriteToDb(
             firebaseUID,
             { ...authRes, ...subRes },
@@ -70,7 +72,6 @@ const RefreshAndFetch = (firebaseUID, refresh_token, category, date) => {
 
   return rp(requestData)
     .then(res => {
-      WriteToDb(firebaseUID, true, 'fitbitAuth', 'user')
       WriteToDb(firebaseUID, res, 'fitbitAuth', '')
       return fetchData(
         res.user_id,
