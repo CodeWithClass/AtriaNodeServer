@@ -9,8 +9,7 @@ const fetchData = (
   category,
   date = null
 ) => {
-  if (!date) date = formatDate()
-
+  date = formatDate()
   const dataURL = `https://api.fitbit.com/1/user/${fitbitUID}/${category}/date/${date}.json`
 
   const requestData = {

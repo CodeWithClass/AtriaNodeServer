@@ -11,7 +11,6 @@ const scope =
 const response_type = 'code'
 const getTokenURL = 'https://api.fitbit.com/oauth2/token'
 const revokeTokenURL = 'https://api.fitbit.com/oauth2/revoke'
-const { formatDate } = require('../helpers/formating')
 
 const AccessToken = (fitbitCode, firebaseUID) => {
   const requestBody = {
@@ -79,7 +78,7 @@ const RefreshAndFetch = (firebaseUID, refresh_token, category, date) => {
         res.access_token,
         firebaseUID,
         category,
-        formatDate()
+        date
       )
     })
     .catch(err => {
