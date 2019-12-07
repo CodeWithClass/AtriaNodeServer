@@ -10,7 +10,7 @@ const formatMLData = require('../machineLearning/formatData')
 const basepyUrl = path.join(__dirname, '../machineLearning/base.py')
 const verificationCode =
   '42ca309719f9695e4824043d3788ea2f41a74cb9396d89012cb846065166f24e'
-// const { formatDate, formatDateDetailed } = require('../helpers/formating')
+const { formatDate, formatDateDetailed } = require('../helpers/formating')
 // =============================== Withings ================================>
 router.get('/api/say_hi', (req, res) => {
   res.json({
@@ -170,11 +170,11 @@ router.get('/api/ml', (req, res) => {
 
 // ======================== Testing ==========================
 
-// router.get('/test/date', (req, res) => {
-//   res.json({
-//     reg: formatDate(),
-//     detailed: formatDateDetailed()
-//   })
-// })
+router.get('/test/date', (req, res) => {
+  res.json({
+    reg: formatDate(),
+    detailed: formatDateDetailed()
+  })
+})
 
 module.exports = router

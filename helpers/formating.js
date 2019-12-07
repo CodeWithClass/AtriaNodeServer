@@ -1,30 +1,10 @@
-const formatDate = () => {
-  const fullDate = new Date()
-  const date =
-    fullDate.getFullYear() +
-    '-' +
-    (fullDate.getMonth() + 1) +
-    '-' +
-    fullDate.getDate()
+const moment = require('moment')
 
-  return date
+const formatDate = (date = new Date()) => {
+  return moment(date).format('YYYY-MM-DD')
 }
 
-const formatDateDetailed = () => {
-  const fullDate = new Date()
-  const date =
-    fullDate.getFullYear() +
-    '-' +
-    (fullDate.getMonth() + 1) +
-    '-' +
-    fullDate.getDate() +
-    ' ' +
-    fullDate.getHours() +
-    ':' +
-    fullDate.getMinutes() +
-    ':' +
-    fullDate.getSeconds()
-
-  return date
+const formatDateDetailed = (date = new Date()) => {
+  return moment(date).format('YYYY-MM-DD HH:mm:ss')
 }
 module.exports = { formatDate, formatDateDetailed }
