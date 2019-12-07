@@ -1,5 +1,6 @@
 const rp = require('request-promise')
 const { WriteToDb } = require('../helpers/db-helpers')
+const { formatDate } = require('../helpers/formating')
 
 const fetchData = (
   fitbitUID,
@@ -8,15 +9,8 @@ const fetchData = (
   category,
   date = null
 ) => {
-  if (!date) {
-    const fullDate = new Date()
-    date =
-      fullDate.getFullYear() +
-      '-' +
-      (fullDate.getMonth() + 1) +
-      '-' +
-      fullDate.getDate()
-  }
+  if (!date) date = formatDate()
+
   const dataURL = `https://api.fitbit.com/1/user/${fitbitUID}/${category}/date/${date}.json`
 
   const requestData = {
