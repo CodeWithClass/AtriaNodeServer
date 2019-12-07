@@ -2,7 +2,6 @@ const express = require('express')
 const _ = require('lodash')
 const router = express.Router()
 const { ReadFromDb } = require('../helpers/db-helpers')
-const { formatDate } = require('../helpers/formating')
 const { RefreshAndFetch } = require('../fitbit/auth')
 
 // =============================== Withings ================================>
@@ -20,8 +19,7 @@ router.post('/api/fitbit/webhook', (req, res) => {
   res.status(204).send()
 
   _.forEach(req.body, notifi => {
-    const { subscriptionId, collectionType } = notifi
-    const date = formatDate()
+    const { subscriptionId, collectionType, date } = notifi
     ReadFromDb(subscriptionId, 'fitbitAuth/refresh_token')
       .then(dataSnapshot => {
         let refresh_token = dataSnapshot.val()
