@@ -56,11 +56,11 @@ const ProcessData = (firebaseUID, date, dataObj = {}) => {
 
   let filteredData = formattedData.filter(element => element)
 
-  return WriteToDb(
+  return WriteToDb({
     firebaseUID,
-    filteredData,
-    'bp',
-    'dailyStats/' + date.toString()
-  )
+    data: filteredData,
+    key: 'bp',
+    path: 'dailyStats/' + date.toString()
+  })
 }
 module.exports = { getBPData }

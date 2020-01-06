@@ -36,14 +36,18 @@ const AccessToken = (fitbitCode, firebaseUID) => {
       //after accesstoken is received subscribe for updates
       return AddSubscriber(firebaseUID, authRes.access_token)
         .then(subRes => {
-          WriteToDb(firebaseUID, true, 'fitbitAuth', 'user')
-
-          return WriteToDb(
+          WriteToDb({
             firebaseUID,
-            { ...authRes, ...subRes },
-            'fitbitAuth',
-            ''
-          )
+            data: true,
+            key: 'fitbitAuth',
+            path: 'user'
+          })
+
+          return WriteToDb({
+            firebaseUID,
+            data: { ...authRes, ...subRes },
+            key: 'fitbitAuth'
+          })
         })
         .catch(err => console.log('subscribe err: ', err))
     })
@@ -72,7 +76,7 @@ const RefreshAndFetch = (firebaseUID, refresh_token, category, date) => {
 
   return rp(requestData)
     .then(res => {
-      WriteToDb(firebaseUID, res, 'fitbitAuth', '')
+      WriteToDb({ firebaseUID, data: res, key: 'fitbitAuth' })
       return fetchData(
         res.user_id,
         res.access_token,
@@ -102,7 +106,7 @@ const RevokeToken = (token, firebaseUID) => {
 
   return rp(requestData)
     .then(() => {
-      return RemoveFromDb(firebaseUID, 'fitbitAuth', '')
+      return RemoveFromDb({ firebaseUID, toBeRemoved: 'fitbitAuth' })
     })
     .catch(err => {
       return err

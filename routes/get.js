@@ -6,11 +6,11 @@ const path = require('path')
 const withingsAuth = require('../withings/auth')
 const withingsData = require('../withings/fetchdata')
 const fitbitAuth = require('../fitbit/auth')
-const formatMLData = require('../machineLearning/formatData')
+const { formatMLData } = require('../machineLearning/formatData')
 const basepyUrl = path.join(__dirname, '../machineLearning/base.py')
-const verificationCode =
-  '42ca309719f9695e4824043d3788ea2f41a74cb9396d89012cb846065166f24e'
 const { formatDate, formatDateDetailed } = require('../helpers/formating')
+const recommender = require('../recommender/recommender')
+
 // =============================== Withings ================================>
 router.get('/api/say_hi', (req, res) => {
   res.json({
@@ -119,6 +119,8 @@ router.get('/api/fitbit/fetchdata', (req, res) => {
 
 //allow fitbit to verify server
 router.get('/api/fitbit/webhook', (req, res) => {
+  const verificationCode =
+    '42ca309719f9695e4824043d3788ea2f41a74cb9396d89012cb846065166f24e'
   if (req.query.verify === verificationCode) res.status(204).send()
   res.status(404).send()
 })
@@ -135,6 +137,23 @@ router.get('/api/fitbit/revoketoken', (req, res) => {
     })
     .catch(err => {
       console.log(err)
+    })
+})
+
+// ============================ Recommender ============================
+router.get('/api/recommendation', (req, res) => {
+  const { firebaseUID, date } = req.query
+  recommender
+    .calcRec(firebaseUID, date)
+    .then(resp => {
+      res.json({
+        response: resp
+      })
+    })
+    .catch(err => {
+      res.json({
+        error: err
+      })
     })
 })
 
@@ -155,13 +174,13 @@ router.get('/api/ml', (req, res) => {
 
   runPy
     .then(resp => {
-      let response = formatMLData.formatData(resp)
+      const response = formatMLData(resp)
       res.json({
         response
       })
     })
     .catch(err => {
-      let error = formatMLData.formatData(err)
+      const error = formatMLData(err)
       res.json({
         error
       })

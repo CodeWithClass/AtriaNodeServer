@@ -20,7 +20,10 @@ router.post('/api/fitbit/webhook', (req, res) => {
 
   _.forEach(req.body, notifi => {
     const { subscriptionId, collectionType, date } = notifi
-    ReadFromDb(subscriptionId, 'fitbitAuth/refresh_token')
+    ReadFromDb({
+      firebaseUID: subscriptionId,
+      path: 'fitbitAuth/refresh_token'
+    })
       .then(dataSnapshot => {
         let refresh_token = dataSnapshot.val()
         if (refresh_token) {

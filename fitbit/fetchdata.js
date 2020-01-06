@@ -28,7 +28,12 @@ const fetchData = (
   return rp(requestData)
     .then(res => {
       if (res.statusCode === 200)
-        return WriteToDb(firebaseUID, res.body, category, firebasePath)
+        return WriteToDb({
+          firebaseUID,
+          data: res.body,
+          key: category,
+          path: firebasePath
+        })
       else return res
     })
     .catch(err => {

@@ -1,7 +1,8 @@
 const firebase = require('firebase-admin')
 const db = firebase.database()
 
-const WriteToDb = (firebaseUID, data, key, path = '') => {
+const WriteToDb = params => {
+  const { firebaseUID, data, key, path = '' } = params
   return new Promise((resolve, reject) => {
     let user = db.ref('users/' + firebaseUID + '/' + path)
     user.update({
@@ -11,15 +12,17 @@ const WriteToDb = (firebaseUID, data, key, path = '') => {
     reject({ fbstatus: 401, body: 'firebase write has failed' })
   })
 }
-const ReadFromDb = (firebaseUID, path = '') => {
-  let ref = db.ref('users/' + firebaseUID + '/' + path)
+const ReadFromDb = params => {
+  const { firebaseUID, path = '' } = params
+  const ref = db.ref('users/' + firebaseUID + '/' + path)
   return ref.once('value', snapshot => {
     return snapshot.val()
   })
   //this returns a promise
 }
 
-const RemoveFromDb = (firebaseUID, toBeRemoved, path = '') => {
+const RemoveFromDb = params => {
+  const { firebaseUID, toBeRemoved, path = '' } = params
   return new Promise((resolve, reject) => {
     let user = db.ref('users/' + firebaseUID + path)
     user.child(toBeRemoved).remove()

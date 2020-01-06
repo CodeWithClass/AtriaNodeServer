@@ -25,8 +25,8 @@ const AccessToken = (withingscode, firebaseUID) => {
 
   return rp(requestData)
     .then(resBody => {
-      WriteToDb(firebaseUID, true, 'withingsAuth', 'user')
-      return WriteToDb(firebaseUID, resBody, 'withingsAuth')
+      WriteToDb({ firebaseUID, data: true, key: 'withingsAuth', path: 'user' })
+      return WriteToDb({ firebaseUID, data: resBody, key: 'withingsAuth' })
     })
     .catch(err => {
       return console.log(err)
@@ -50,7 +50,7 @@ const RefreshToken = (refresh_token, firebaseUID) => {
 
   return rp(requestData)
     .then(res => {
-      return WriteToDb(firebaseUID, res, 'withingsAuth')
+      return WriteToDb({ firebaseUID, data: res, key: 'withingsAuth' })
     })
     .catch(err => {
       return err.response
