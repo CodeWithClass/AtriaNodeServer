@@ -27,11 +27,10 @@ const fetchData = (
   const firebasePath = `dailyStats/${date}`
   return rp(requestData)
     .then(res => {
-      const data = removeSlpMinData(res.body)
       if (res.statusCode === 200)
         return WriteToDb({
           firebaseUID,
-          data,
+          data: removeSlpMinData(res.body),
           key: category,
           path: firebasePath
         })
