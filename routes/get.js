@@ -6,7 +6,6 @@ const path = require('path')
 const withingsAuth = require('../withings/auth')
 const withingsData = require('../withings/fetchdata')
 const fitbitAuth = require('../fitbit/auth')
-const { removeSlpMinData } = require('../fitbit/fetchdata')
 const { formatMLData } = require('../machineLearning/formatData')
 const basepyUrl = path.join(__dirname, '../machineLearning/base.py')
 const { formatDate, formatDateDetailed } = require('../helpers/formating')
@@ -207,6 +206,7 @@ router.get('/test/general', (req, res) => {
   })
 })
 
+const { removeSlpMinData } = require('../fitbit/fetchdata')
 router.post('/test/general', (req, res) => {
   const { func } = req.query
   const param = req.body
