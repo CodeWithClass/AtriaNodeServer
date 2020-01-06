@@ -1,6 +1,7 @@
 const rp = require('request-promise')
 const { WriteToDb } = require('../helpers/db-helpers')
 const { formatDate } = require('../helpers/formating')
+const _ = require('lodash')
 
 const fetchData = (
   fitbitUID,
@@ -24,25 +25,26 @@ const fetchData = (
   }
 
   const firebasePath = `dailyStats/${date}`
-
   return rp(requestData)
     .then(res => {
+      const data = removeSlpMinData(res.body)
       if (res.statusCode === 200)
         return WriteToDb({
           firebaseUID,
-          data: removeSlpMinData(res.body),
+          data,
           key: category,
           path: firebasePath
         })
-      else return res
+      return res
     })
     .catch(err => {
+      console.log(err)
       return err
     })
 }
 
 const removeSlpMinData = data => {
-  let { sleep } = data
+  let { sleep = [] } = data
   if (sleep.length < 1) return data
 
   data.sleep.filter(element => {
@@ -51,4 +53,4 @@ const removeSlpMinData = data => {
   return data
 }
 
-module.exports = { fetchData, removeSlpMinData }
+module.exports = { fetchData }

@@ -113,7 +113,7 @@ router.get('/api/fitbit/fetchdata', (req, res) => {
       })
     })
     .catch(err => {
-      console.log(err)
+      return err
     })
 })
 
