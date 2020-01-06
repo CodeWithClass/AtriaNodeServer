@@ -30,7 +30,7 @@ const fetchData = (
       if (res.statusCode === 200)
         return WriteToDb({
           firebaseUID,
-          data: res.body,
+          data: removeSlpMinData(res.body),
           key: category,
           path: firebasePath
         })
@@ -41,4 +41,14 @@ const fetchData = (
     })
 }
 
-module.exports = { fetchData }
+const removeSlpMinData = data => {
+  let { sleep } = data
+  if (sleep.length < 1) return {}
+  sleep.filter(element => {
+    delete element.minuteData
+    return true
+  })
+  return { sleep }
+}
+
+module.exports = { fetchData, removeSlpMinData }

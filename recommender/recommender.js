@@ -1,6 +1,6 @@
 const { ReadFromDb } = require('../helpers/db-helpers')
 
-const getRec = data => {}
+const getRec = params => {}
 
 const calcRec = async (firebaseUID, date) => {
   const dailyStatsSnapshot = await ReadFromDb({

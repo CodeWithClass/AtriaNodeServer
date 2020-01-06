@@ -12,6 +12,7 @@ const WriteToDb = params => {
     reject({ fbstatus: 401, body: 'firebase write has failed' })
   })
 }
+
 const ReadFromDb = params => {
   const { firebaseUID, path = '' } = params
   const ref = db.ref('users/' + firebaseUID + '/' + path)

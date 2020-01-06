@@ -6,6 +6,7 @@ const path = require('path')
 const withingsAuth = require('../withings/auth')
 const withingsData = require('../withings/fetchdata')
 const fitbitAuth = require('../fitbit/auth')
+const { removeSlpMinData } = require('../fitbit/fetchdata')
 const { formatMLData } = require('../machineLearning/formatData')
 const basepyUrl = path.join(__dirname, '../machineLearning/base.py')
 const { formatDate, formatDateDetailed } = require('../helpers/formating')
@@ -196,4 +197,28 @@ router.get('/test/date', (req, res) => {
   })
 })
 
+router.get('/test/general', (req, res) => {
+  const { func } = req.query
+  // const data = eval("removeSlpMinData({sleep:[{ hi: 'you' }]})")
+  const data = eval(func)
+
+  res.json({
+    res: data
+  })
+})
+
+router.post('/test/general', (req, res) => {
+  const { func } = req.query
+  const param = req.body
+  // console.log(`${func}(${JSON.stringify(param)})`)
+  // const param = func
+  // const data = eval("removeSlpMinData({sleep:[{ hi: 'you' }]})")
+  const data = eval(`${func}(${JSON.stringify(param)})`)
+
+  res.json({
+    // res: 'hi'
+    ...data
+    // ...param
+  })
+})
 module.exports = router
