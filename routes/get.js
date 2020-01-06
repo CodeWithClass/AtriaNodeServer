@@ -210,9 +210,6 @@ const { removeSlpMinData } = require('../fitbit/fetchdata')
 router.post('/test/general', (req, res) => {
   const { func } = req.query
   const param = req.body
-  // console.log(`${func}(${JSON.stringify(param)})`)
-  // const param = func
-  // const data = eval("removeSlpMinData({sleep:[{ hi: 'you' }]})")
   const data = eval(`${func}(${JSON.stringify(param)})`)
 
   res.json({

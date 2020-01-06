@@ -43,12 +43,11 @@ const fetchData = (
 
 const removeSlpMinData = data => {
   let { sleep } = data
-  if (sleep.length < 1) return {}
-  sleep.filter(element => {
+  if (sleep.length < 1) return data
+  data.sleep.filter(element => {
     delete element.minuteData
-    return true
   })
-  return { sleep }
+  return data
 }
 
 module.exports = { fetchData, removeSlpMinData }
