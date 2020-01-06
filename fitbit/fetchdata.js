@@ -37,13 +37,14 @@ const fetchData = (
       else return res
     })
     .catch(err => {
-      return err.response
+      return err
     })
 }
 
 const removeSlpMinData = data => {
   let { sleep } = data
   if (sleep.length < 1) return data
+
   data.sleep.filter(element => {
     delete element.minuteData
   })
