@@ -1,7 +1,6 @@
 const rp = require('request-promise')
 const { WriteToDb } = require('../helpers/db-helpers')
 const { formatDate } = require('../helpers/formating')
-const _ = require('lodash')
 
 const fetchData = (
   fitbitUID,

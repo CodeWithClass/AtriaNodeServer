@@ -141,16 +141,45 @@ router.get('/api/fitbit/revoketoken', (req, res) => {
 })
 
 // ============================ Recommender ============================
-router.get('/api/recommendation', (req, res) => {
+router.get('/api/recommendation/generate', (req, res) => {
   const { firebaseUID, date } = req.query
   recommender
-    .calcRec(firebaseUID, date)
+    .calcRec({ firebaseUID, date })
     .then(resp => {
       res.json({
         response: resp
       })
     })
     .catch(err => {
+      console.log(err)
+      res.json({
+        error: err
+      })
+    })
+})
+
+router.post('/api/recommendation/process', (req, res) => {
+  const { firebaseUID, date } = req.query
+  const data = req.body || {}
+
+  if (_.isEmpty(data))
+    return res.json({
+      response: 'no data in request body'
+    })
+
+  recommender
+    .process({
+      firebaseUID,
+      date,
+      data
+    })
+    .then(resp => {
+      res.json({
+        response: resp
+      })
+    })
+    .catch(err => {
+      console.log(err)
       res.json({
         error: err
       })

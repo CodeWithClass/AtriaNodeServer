@@ -13,6 +13,16 @@ const WriteToDb = params => {
   })
 }
 
+const PushToDb = params => {
+  const { firebaseUID, data, path = '' } = params
+  return new Promise((resolve, reject) => {
+    let user = db.ref('users/' + firebaseUID + '/' + path)
+    user.push(data)
+    resolve({ fbstatus: 200, body: data })
+    reject({ fbstatus: 401, body: 'firebase write has failed' })
+  })
+}
+
 const ReadFromDb = params => {
   const { firebaseUID, path = '' } = params
   const ref = db.ref('users/' + firebaseUID + '/' + path)
@@ -33,4 +43,4 @@ const RemoveFromDb = params => {
   })
 }
 
-module.exports = { WriteToDb, ReadFromDb, RemoveFromDb }
+module.exports = { WriteToDb, PushToDb, ReadFromDb, RemoveFromDb }
