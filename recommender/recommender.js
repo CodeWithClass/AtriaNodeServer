@@ -31,11 +31,11 @@ const calcRec = async params => {
   const mystats = myStatsSnapshot.val()
 
   const rand_indecies = randomize()
-  const recomendations = getRec(rand_indecies[0], rand_indecies[1])
+  const recommendations = getRec(rand_indecies[0], rand_indecies[1])
   const summary = getSum(rand_indecies[1])
   const dbWrite = await WriteToDb({
     firebaseUID,
-    data: { recomendations, summary },
+    data: { recommendations, summary },
     key: 'currRec'
   })
   return new Promise((resolve, reject) => {

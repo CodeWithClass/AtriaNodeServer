@@ -158,34 +158,6 @@ router.get('/api/recommendation/generate', (req, res) => {
     })
 })
 
-router.post('/api/recommendation/process', (req, res) => {
-  const { firebaseUID, date } = req.query
-  const data = req.body || {}
-
-  if (_.isEmpty(data))
-    return res.json({
-      response: 'no data in request body'
-    })
-
-  recommender
-    .process({
-      firebaseUID,
-      date,
-      data
-    })
-    .then(resp => {
-      res.json({
-        response: resp
-      })
-    })
-    .catch(err => {
-      console.log(err)
-      res.json({
-        error: err
-      })
-    })
-})
-
 // ============================ ML ============================
 
 router.get('/api/ml', (req, res) => {

@@ -3,6 +3,7 @@ const _ = require('lodash')
 const router = express.Router()
 const { ReadFromDb } = require('../helpers/db-helpers')
 const { RefreshAndFetch } = require('../fitbit/auth')
+const recommender = require('../recommender/recommender')
 
 // =============================== Withings ================================>
 router.post('/api/withings/auth', (req, res) => {
@@ -39,6 +40,36 @@ router.post('/api/fitbit/webhook', (req, res) => {
       })
       .catch(err => console.log('cant read from db ', err))
   })
+})
+
+// =============================== recommender ================================>
+
+router.post('/api/recommendation/process', (req, res) => {
+  const { firebaseUID, date } = req.query
+  const data = req.body || {}
+
+  if (_.isEmpty(data))
+    return res.json({
+      response: 'no data in request body'
+    })
+
+  recommender
+    .process({
+      firebaseUID,
+      date,
+      data
+    })
+    .then(resp => {
+      res.json({
+        response: resp
+      })
+    })
+    .catch(err => {
+      console.log(err)
+      res.json({
+        error: err
+      })
+    })
 })
 
 module.exports = router
