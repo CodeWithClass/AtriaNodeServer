@@ -1,6 +1,6 @@
 const rp = require('request-promise')
 const { WriteToDb } = require('../helpers/db-helpers')
-const { formatDateDetailed } = require('../helpers/formating')
+const { formatDateDetailed, unixToDetailed } = require('../helpers/formating')
 
 const dataURL = 'https://wbsapi.withings.net/measure'
 
@@ -19,6 +19,7 @@ const getBPData = (accesstoken, firebaseUID, date) => {
 
   return rp(requestData)
     .then(res => {
+      // console.log(res.body || body)
       if (res.status == 401) return res
       else return ProcessData(firebaseUID, date, res.body || res)
     })
@@ -31,7 +32,7 @@ const ProcessData = (firebaseUID, date, dataObj = {}) => {
   if (!dataObj.measuregrps) return dataObj
 
   let formattedData = dataObj.measuregrps.map(d => {
-    const detailedDate = formatDateDetailed()
+    const detailedDate = unixToDetailed(d.date)
 
     let diastolic = d.measures[0] ? d.measures[0].value : 0
     while (diastolic > 300) diastolic /= 10 //manual update adds extra 0s

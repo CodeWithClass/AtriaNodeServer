@@ -7,4 +7,8 @@ const formatDate = (date = new Date()) => {
 const formatDateDetailed = (date = new Date()) => {
   return moment(date).format('YYYY-MM-DD HH:mm:ss')
 }
-module.exports = { formatDate, formatDateDetailed }
+
+const unixToDetailed = date => {
+  return moment.unix(date).format('YYYY-MM-DD HH:mm:ss')
+}
+module.exports = { formatDate, formatDateDetailed, unixToDetailed }
