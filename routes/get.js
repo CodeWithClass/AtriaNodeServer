@@ -10,7 +10,7 @@ const { formatMLData } = require('../machineLearning/formatData')
 const basepyUrl = path.join(__dirname, '../machineLearning/base.py')
 const { formatDate, formatDateDetailed } = require('../helpers/formating')
 const recommender = require('../recommender/recommender')
-
+const { RemoveFromDb } = require('../helpers/db-helpers')
 // =============================== Withings ================================>
 router.get('/api/say_hi', (req, res) => {
   res.json({
@@ -205,6 +205,17 @@ router.get('/test/general', (req, res) => {
   res.json({
     res: data
   })
+})
+
+router.get('/test/remove', (req, res) => {
+  const { firebaseUID, toBeRemoved, path = '' } = req.query
+  RemoveFromDb({ firebaseUID, toBeRemoved, path })
+    .then(resp => {
+      res.json({
+        resp
+      })
+    })
+    .catch(() => console.log({ err }))
 })
 
 const { removeSlpMinData } = require('../fitbit/fetchdata')

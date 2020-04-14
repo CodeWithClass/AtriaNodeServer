@@ -1,29 +1,30 @@
 const rp = require('request-promise')
 const { WriteToDb, ReadFromDb } = require('../helpers/db-helpers')
 const { formatDateDetailed, unixToDetailed } = require('../helpers/formating')
+const _ = require('lodash')
 
 const dataURL = 'https://wbsapi.withings.net/measure'
 
 const getBPData = (accesstoken, firebaseUID, date) => {
   const params = {
     action: 'getmeas',
-    access_token: accesstoken
+    access_token: accesstoken,
   }
 
   const requestData = {
     method: 'GET',
     uri: dataURL,
     qs: params,
-    json: true // Automatically stringifies the body to JSON
+    json: true, // Automatically stringifies the body to JSON
   }
 
   return rp(requestData)
-    .then(res => {
+    .then((res) => {
       // console.log(res.body || body)
       if (res.status == 401) return res
       else return ProcessData(firebaseUID, date, res.body || res)
     })
-    .catch(err => {
+    .catch((err) => {
       return err.response
     })
 }
@@ -32,7 +33,7 @@ const ProcessData = (firebaseUID, date, dataObj = {}) => {
   //fix this
   if (!dataObj.measuregrps) return dataObj
 
-  let formattedData = dataObj.measuregrps.map(d => {
+  let formattedData = dataObj.measuregrps.map((d) => {
     const pid = d.grpid
     const detailedDate = unixToDetailed(d.date)
 
@@ -53,40 +54,41 @@ const ProcessData = (firebaseUID, date, dataObj = {}) => {
         date: detailedDate,
         diastolic,
         systolic,
-        hr
-      }
+        hr,
+      },
     }
   })
 
-  const filteredData = formattedData.filter(element => element)
+  const filteredData = formattedData.filter((element) => element)
   return finalizeData({ firebaseUID, filteredData, date })
 }
 
-const finalizeData = async params => {
+const finalizeData = async (params) => {
   const { firebaseUID, filteredData, date } = params
-  const path = 'dailyStats/' + date.toString() + '/bp'
-
+  const path = 'dailyStats/' + date.toString()
   const dataSnapshot = await ReadFromDb({ firebaseUID, path })
 
-  //     let dataFromDb = dataSnapshot.val() || []
-  //     let finalData = []
+  let dataFromDb = dataSnapshot.val().bp || []
 
-  // dataFromDb.forEach(DBelement => {
-  //   filteredData.forEach(withingsElement => {
-  //     if (DBelement.measurement.pid === withingsElement.measurement.pid) {
-  //       finalData.push(withingsElement)
-  //       console.log(true)
-  //     } else finalData.push(DBelement)
-  //   })
-  // })
-  // console.log({ finalData })
+  if (!dataFromDb || Object.keys(dataFromDb).length === 0) {
+    console.log('should retu')
+    return WriteToDb({
+      firebaseUID,
+      data: filteredData,
+      key: 'bp',
+      path,
+    })
+  }
 
-  // return WriteToDb({
-  //   firebaseUID,
-  //   data: finalData,
-  //   key: 'bp',
-  //   path
-  // })
+  let concatArr = _.concat(dataFromDb, filteredData)
+  let finalData = _.uniqBy(concatArr, 'measurement.pid')
+
+  return WriteToDb({
+    firebaseUID,
+    data: finalData,
+    key: 'bp',
+    path,
+  })
 }
 
 module.exports = { getBPData }

@@ -26,12 +26,8 @@ const PushToDb = params => {
 const ReadFromDb = params => {
   const { firebaseUID, path = '' } = params
   const ref = db.ref('users/' + firebaseUID + '/' + path)
-  console.log('users/' + firebaseUID + '/' + path)
 
   return ref.once('value', snapshot => {
-    console.log(snapshot.val())
-    console.log('called one more')
-
     return snapshot.val()
   })
   //this returns a promise
@@ -39,6 +35,7 @@ const ReadFromDb = params => {
 
 const RemoveFromDb = params => {
   const { firebaseUID, toBeRemoved, path = '' } = params
+  console.log('users/' + firebaseUID + path)
   return new Promise((resolve, reject) => {
     let user = db.ref('users/' + firebaseUID + path)
     user.child(toBeRemoved).remove()
