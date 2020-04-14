@@ -1,6 +1,6 @@
 const rp = require('request-promise')
 const { WriteToDb, ReadFromDb } = require('../helpers/db-helpers')
-const { formatDateDetailed, unixToDetailed } = require('../helpers/formating')
+const { unixToDetailed } = require('../helpers/formating')
 const _ = require('lodash')
 
 const dataURL = 'https://wbsapi.withings.net/measure'
@@ -20,8 +20,8 @@ const getBPData = (accesstoken, firebaseUID, date) => {
 
   return rp(requestData)
     .then((res) => {
-      // console.log(res.body || body)
-      if (res.status == 401) return res
+      console.log(_.get(res, 'body', 0))
+      if (_.get(res, 'status', -1) == 401) return res
       else return ProcessData(firebaseUID, date, res.body || res)
     })
     .catch((err) => {
@@ -34,7 +34,7 @@ const ProcessData = (firebaseUID, date, dataObj = {}) => {
   if (!dataObj.measuregrps) return dataObj
 
   let formattedData = dataObj.measuregrps.map((d) => {
-    const pid = d.grpid
+    const pid = d.grpid || _.random(1221226674, 8321226674)
     const detailedDate = unixToDetailed(d.date)
 
     let diastolic = d.measures[0] ? d.measures[0].value : 0
@@ -71,7 +71,6 @@ const finalizeData = async (params) => {
   let dataFromDb = dataSnapshot.val().bp || []
 
   if (!dataFromDb || Object.keys(dataFromDb).length === 0) {
-    console.log('should retu')
     return WriteToDb({
       firebaseUID,
       data: filteredData,
@@ -82,7 +81,6 @@ const finalizeData = async (params) => {
 
   let concatArr = _.concat(dataFromDb, filteredData)
   let finalData = _.uniqBy(concatArr, 'measurement.pid')
-
   return WriteToDb({
     firebaseUID,
     data: finalData,
