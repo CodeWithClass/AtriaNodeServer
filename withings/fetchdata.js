@@ -1,5 +1,5 @@
 const rp = require('request-promise')
-const { WriteToDb } = require('../helpers/db-helpers')
+const { WriteToDb, ReadFromDb } = require('../helpers/db-helpers')
 const { formatDateDetailed, unixToDetailed } = require('../helpers/formating')
 
 const dataURL = 'https://wbsapi.withings.net/measure'
@@ -29,9 +29,11 @@ const getBPData = (accesstoken, firebaseUID, date) => {
 }
 
 const ProcessData = (firebaseUID, date, dataObj = {}) => {
+  //fix this
   if (!dataObj.measuregrps) return dataObj
 
   let formattedData = dataObj.measuregrps.map(d => {
+    const pid = d.grpid
     const detailedDate = unixToDetailed(d.date)
 
     let diastolic = d.measures[0] ? d.measures[0].value : 0
@@ -47,6 +49,7 @@ const ProcessData = (firebaseUID, date, dataObj = {}) => {
 
     return {
       measurement: {
+        pid,
         date: detailedDate,
         diastolic,
         systolic,
@@ -55,13 +58,35 @@ const ProcessData = (firebaseUID, date, dataObj = {}) => {
     }
   })
 
-  let filteredData = formattedData.filter(element => element)
-
-  return WriteToDb({
-    firebaseUID,
-    data: filteredData,
-    key: 'bp',
-    path: 'dailyStats/' + date.toString()
-  })
+  const filteredData = formattedData.filter(element => element)
+  return finalizeData({ firebaseUID, filteredData, date })
 }
+
+const finalizeData = async params => {
+  const { firebaseUID, filteredData, date } = params
+  const path = 'dailyStats/' + date.toString() + '/bp'
+
+  const dataSnapshot = await ReadFromDb({ firebaseUID, path })
+
+  //     let dataFromDb = dataSnapshot.val() || []
+  //     let finalData = []
+
+  // dataFromDb.forEach(DBelement => {
+  //   filteredData.forEach(withingsElement => {
+  //     if (DBelement.measurement.pid === withingsElement.measurement.pid) {
+  //       finalData.push(withingsElement)
+  //       console.log(true)
+  //     } else finalData.push(DBelement)
+  //   })
+  // })
+  // console.log({ finalData })
+
+  // return WriteToDb({
+  //   firebaseUID,
+  //   data: finalData,
+  //   key: 'bp',
+  //   path
+  // })
+}
+
 module.exports = { getBPData }
