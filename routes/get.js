@@ -14,7 +14,7 @@ const { RemoveFromDb } = require('../helpers/db-helpers')
 // =============================== Withings ================================>
 router.get('/api/say_hi', (req, res) => {
   res.json({
-    message: 'welcome'
+    message: 'welcome',
   })
 })
 
@@ -24,22 +24,22 @@ router.get('/api/withings/auth', (req, res) => {
   if (AccessCode) {
     withingsAuth
       .AccessToken(AccessCode, uid)
-      .then(resp => {
+      .then((resp) => {
         if (_.get(resp, 'fbstatus') === 200)
           res.sendFile('success.html', {
-            root: path.join(__dirname, '../public/withingsAuth')
+            root: path.join(__dirname, '../public/withingsAuth'),
           })
         else
           res.sendFile('failure.html', {
-            root: path.join(__dirname, '../public/withingsAuth')
+            root: path.join(__dirname, '../public/withingsAuth'),
           })
       })
-      .catch(err => {
+      .catch((err) => {
         console.log({ err })
       })
   } else {
     res.sendFile('failure.html', {
-      root: path.join(__dirname, '../public/withingsAuth')
+      root: path.join(__dirname, '../public/withingsAuth'),
     })
   }
 })
@@ -50,12 +50,12 @@ router.get('/api/withings/refresh_token', (req, res) => {
   withingsAuth
     .RefreshToken(refToken, uid)
 
-    .then(resp => {
+    .then((resp) => {
       res.json({
-        resp
+        resp,
       })
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(err)
     })
 })
@@ -67,12 +67,12 @@ router.get('/api/withings/fetchdata', (req, res) => {
 
   withingsData
     .getBPData(accesstoken, uid, date)
-    .then(resp => {
+    .then((resp) => {
       res.json({
-        response: resp
+        response: resp,
       })
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(err)
     })
 })
@@ -85,20 +85,20 @@ router.get('/api/fitbit/auth', (req, res) => {
   if (AccessCode) {
     fitbitAuth
       .AccessToken(AccessCode, uid)
-      .then(resp => {
+      .then((resp) => {
         if (resp.fbstatus === 200)
           res.sendFile('success.html', {
-            root: path.join(__dirname, '../public/fitbitAuth')
+            root: path.join(__dirname, '../public/fitbitAuth'),
           })
         else
           res.sendFile('failure.html', {
-            root: path.join(__dirname, '../public/fitbitAuth')
+            root: path.join(__dirname, '../public/fitbitAuth'),
           })
       })
-      .catch(err => {})
+      .catch((err) => {})
   } else {
     res.sendFile('failure.html', {
-      root: path.join(__dirname, '../public/fitbitAuth')
+      root: path.join(__dirname, '../public/fitbitAuth'),
     })
   }
 })
@@ -107,12 +107,12 @@ router.get('/api/fitbit/fetchdata', (req, res) => {
   const { firebaseUID, refresh_token, category, date } = req.query
   fitbitAuth
     .RefreshAndFetch(firebaseUID, refresh_token, category, date)
-    .then(resp => {
+    .then((resp) => {
       res.json({
-        response: resp
+        response: resp,
       })
     })
-    .catch(err => {
+    .catch((err) => {
       return err
     })
 })
@@ -130,12 +130,12 @@ router.get('/api/fitbit/revoketoken', (req, res) => {
   const { token, firebaseUID } = req.query
   fitbitAuth
     .RevokeToken(token, firebaseUID)
-    .then(response => {
+    .then((response) => {
       res.json({
-        response
+        response,
       })
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(err)
     })
 })
@@ -145,15 +145,15 @@ router.get('/api/recommendation/generate', (req, res) => {
   const { firebaseUID, date } = req.query
   recommender
     .calcRec({ firebaseUID, date })
-    .then(resp => {
+    .then((resp) => {
       res.json({
-        response: resp
+        response: resp,
       })
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(err)
       res.json({
-        error: err
+        error: err,
       })
     })
 })
@@ -165,25 +165,25 @@ router.get('/api/ml', (req, res) => {
     const { spawn } = require('child_process')
     const pyprog = spawn('python', [basepyUrl])
 
-    pyprog.stdout.on('data', data => {
+    pyprog.stdout.on('data', (data) => {
       success(data)
     })
-    pyprog.stderr.on('data', data => {
+    pyprog.stderr.on('data', (data) => {
       nosuccess(data)
     })
   })
 
   runPy
-    .then(resp => {
+    .then((resp) => {
       const response = formatMLData(resp)
       res.json({
-        response
+        response,
       })
     })
-    .catch(err => {
+    .catch((err) => {
       const error = formatMLData(err)
       res.json({
-        error
+        error,
       })
     })
 })
@@ -193,26 +193,23 @@ router.get('/api/ml', (req, res) => {
 router.get('/test/date', (req, res) => {
   res.json({
     reg: formatDate(),
-    detailed: formatDateDetailed()
+    detailed: formatDateDetailed(),
   })
 })
 
 router.get('/test/general', (req, res) => {
-  const { func } = req.query
-  // const data = eval("removeSlpMinData({sleep:[{ hi: 'you' }]})")
-  const data = eval(func)
-
+  var chatJSON = require('../tempFiles/chatJSON.json')
   res.json({
-    res: data
+    ...chatJSON,
   })
 })
 
 router.get('/test/remove', (req, res) => {
   const { firebaseUID, toBeRemoved, path = '' } = req.query
   RemoveFromDb({ firebaseUID, toBeRemoved, path })
-    .then(resp => {
+    .then((resp) => {
       res.json({
-        resp
+        resp,
       })
     })
     .catch(() => console.log({ err }))
@@ -226,7 +223,7 @@ router.post('/test/general', (req, res) => {
 
   res.json({
     // res: 'hi'
-    ...data
+    ...data,
     // ...param
   })
 })

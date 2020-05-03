@@ -1,0 +1,58 @@
+{
+  "units": [
+    {
+      "id": 0,
+      "options": [
+        {
+          "label": "I'm okay",
+          "nextUnit": 1
+        },
+        {
+          "label": "I'm not okay",
+          "nextUnit": 2
+        }
+      ],
+      "responses": ["Hello. I'm Youper.", "How are you?"]
+    },
+    {
+      "id": 1,
+      "nextUnit": 3,
+      "responses": ["That's great"]
+    },
+    {
+      "id": 2,
+      "nextUnit": 3,
+      "responses": ["  Oh, that is bad. I can help you to feel better"]
+    },
+    {
+      "component": {
+        "nextUnit": 4,
+        "type": "textarea"
+      },
+      "id": 3,
+      "responses": ["What do you have in your mind?"]
+    },
+    {
+      "condition": [
+        {
+          "expression": "input.length <= 20",
+          "nextUnit": 5
+        },
+        {
+          "expression": "input.length > 20",
+          "nextUnit": 6
+        }
+      ],
+      "id": 4
+    },
+    {
+      "id": 5,
+      "nextUnit": 6,
+      "responses": ["You could say more, but..."]
+    },
+    {
+      "id": 6,
+      "responses": ["Have a good day!"]
+    }
+  ]
+}
