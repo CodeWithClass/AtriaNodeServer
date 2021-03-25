@@ -44,3 +44,4 @@ UserInterfaceState.xcuserstate
 .ssh/
 tutorial/
 firebase/adminsdk.json
+.DS_Store
