@@ -1,53 +1,54 @@
-const firebase = require("firebase-admin")
-const serviceAccount = require("../firebase/adminsdk.json")
-const rp = require("request-promise")
-const auth = require("./auth")
+const rp = require('request-promise')
+const { WriteToDb } = require('../helpers/db-helpers')
+const { formatDate } = require('../helpers/formating')
 
-const db = firebase.database()
+const fetchData = (
+  fitbitUID,
+  accessToken,
+  firebaseUID,
+  category,
+  date = null
+) => {
+  if (!date) date = formatDate()
 
-const makeCall = (fitbitUID, accessToken, firebaseUID, date = null) => {
-	if (!date)
-		date =
-			fullDate.getFullYear() +
-			"-" +
-			(fullDate.getMonth() + 1) +
-			"-" +
-			fullDate.getDate()
+  const dataURL = `https://api.fitbit.com/1/user/${fitbitUID}/${category}/date/${date}.json`
 
-	const dataURL =
-		"https://api.fitbit.com/1/user/" +
-		fitbitUID +
-		"/activities/date/" +
-		date +
-		".json"
+  const requestData = {
+    method: 'GET',
+    headers: {
+      Authorization: 'Bearer ' + accessToken,
+    },
+    uri: dataURL,
+    json: true, // Automatically stringifies the body to JSON
+    resolveWithFullResponse: true,
+  }
 
-	const requestData = {
-		method: "GET",
-		headers: {
-			Authorization: "Bearer " + accessToken,
-		},
-		uri: dataURL,
-		json: true, // Automatically stringifies the body to JSON
-		resolveWithFullResponse: true,
-	}
-
-	return rp(requestData)
-		.then((res) => {
-			if (res.statusCode === 200) return WriteToDb(firebaseUID, date, res.body)
-			else return res
-		})
-		.catch((err) => {
-			return err.response
-		})
+  const firebasePath = `dailyStats/${date}`
+  return rp(requestData)
+    .then((res) => {
+      if (res.statusCode === 200)
+        return WriteToDb({
+          firebaseUID,
+          data: removeSlpMinData(res.body),
+          key: category,
+          path: firebasePath,
+        })
+      return res
+    })
+    .catch((err) => {
+      console.log(err)
+      return err
+    })
 }
 
-const WriteToDb = (firebaseUID, date, fitbitData = {}) => {
-	return new Promise((resolve, reject) => {
-		let user = db.ref("users/" + firebaseUID + "/dailyStats/" + date.toString())
-		user.update({
-			fitbit: fitbitData,
-		})
-		resolve(fitbitData)
-	})
+const removeSlpMinData = (data) => {
+  let { sleep = [] } = data
+  if (sleep.length < 1) return data
+
+  data.sleep.filter((element) => {
+    delete element.minuteData
+  })
+  return data
 }
-module.exports = { makeCall }
+
+module.exports = { fetchData }
